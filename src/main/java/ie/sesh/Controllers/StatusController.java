@@ -9,6 +9,7 @@ import ie.sesh.Utils.StatusUtils;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,25 +66,26 @@ public class StatusController {
 
             return new ResponseEntity<>("Status Updated", HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>("Failed to update status", HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error(e.getMessage());
         }
-
+        return new ResponseEntity<>("Failed to update status", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("/create/status")
     @ResponseBody
     public ResponseEntity createStatus(@RequestBody String status_data){
         try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
             Status status = statusUtils.buildStatus(status_data);
             if(statusService.createStatus(status, statusUtils.getUserToken(status_data))){
                 log.info("Created Status");
-                return new ResponseEntity<>("Status Created", HttpStatus.OK);
+                return new ResponseEntity<>("Status Created", HttpStatus.OK,headers);
             }
-            return new ResponseEntity<>("Status failed to Create", HttpStatus.INTERNAL_SERVER_ERROR);
         }catch (Exception e){
             log.error(e.getMessage());
-            return new ResponseEntity<>("Status failed to Create", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return new ResponseEntity<>("Status failed to Create", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @DeleteMapping("/delete/status")

@@ -77,10 +77,11 @@ public class StatusController {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+
             Status status = statusUtils.buildStatus(status_data);
             if(statusService.createStatus(status, statusUtils.getUserToken(status_data))){
                 log.info("Created Status");
-                return new ResponseEntity<>("Status Created", HttpStatus.OK,headers);
+                return new ResponseEntity().ok().headers(headers).body("Status Created");
             }
         }catch (Exception e){
             log.error(e.getMessage());

@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2e685be1-f95d-41e2-8029-56a168d89b64" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/src/main/java/ie/sesh/Controllers/StatusController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ie/sesh/Controllers/StatusController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ie/sesh/Utils/StatusUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ie/sesh/Utils/StatusUtils.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -14,11 +15,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/ie/sesh/Controllers/StatusController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="394">
-              <caret line="82" column="16" selection-start-line="82" selection-start-column="16" selection-end-line="82" selection-end-column="16" />
+            <state relative-caret-position="319">
+              <caret line="77" column="46" selection-start-line="77" selection-start-column="46" selection-end-line="77" selection-end-column="46" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -114,11 +115,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/ie/sesh/Utils/StatusUtils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="55" selection-start-line="21" selection-start-column="55" selection-end-line="21" selection-end-column="55" />
+            <state relative-caret-position="480">
+              <caret line="32" column="101" selection-start-line="32" selection-start-column="101" selection-end-line="32" selection-end-column="101" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#634#635#0" expanded="true" />
@@ -166,7 +167,6 @@
         <option value="$PROJECT_DIR$/src/main/java/ie/sesh/Models/Comments/impl/CommentDAOImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/ie/sesh/Utils/CommentUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/ie/sesh/Models/Comments/Comment.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ie/sesh/Utils/StatusUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/ie/sesh/Models/StatusDAO.java" />
         <option value="$PROJECT_DIR$/src/main/java/ie/sesh/Models/impl/StatusDAOImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/ie/sesh/Database/SQLConstants.java" />
@@ -175,6 +175,7 @@
         <option value="$PROJECT_DIR$/src/main/java/ie/sesh/Models/AuthDAO.java" />
         <option value="$PROJECT_DIR$/src/main/java/ie/sesh/Models/impl/AuthDAOImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/ie/sesh/Controllers/StatusController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ie/sesh/Utils/StatusUtils.java" />
       </list>
     </option>
   </component>
@@ -328,7 +329,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1575631653907" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1575632464919" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -557,18 +558,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ie/sesh/Utils/StatusUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="55" selection-start-line="21" selection-start-column="55" selection-end-line="21" selection-end-column="55" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#634#635#0" expanded="true" />
-            <element signature="e#699#700#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ie/sesh/Models/impl/AuthDAOImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -581,10 +570,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ie/sesh/Controllers/StatusController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="394">
-          <caret line="82" column="16" selection-start-line="82" selection-start-column="16" selection-end-line="82" selection-end-column="16" />
+        <state relative-caret-position="319">
+          <caret line="77" column="46" selection-start-line="77" selection-start-column="46" selection-end-line="77" selection-end-column="46" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ie/sesh/Utils/StatusUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="32" column="101" selection-start-line="32" selection-start-column="101" selection-end-line="32" selection-end-column="101" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#634#635#0" expanded="true" />
+            <element signature="e#699#700#0" expanded="true" />
           </folding>
         </state>
       </provider>

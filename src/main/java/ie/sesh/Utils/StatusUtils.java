@@ -28,9 +28,9 @@ public class StatusUtils {
 
     private Object getItem(String status_data, String item, Object def){
         if(def instanceof String) {
-            return checkIsNullEmpty(new JSONObject(status_data).getJSONArray(item).get(0).toString(), def);
+            return checkIsNullEmpty(new JSONObject(status_data).get(item).toString(),def);
         }else{
-            return checkIsNullEmpty(Integer.parseInt(new JSONObject(status_data).getJSONArray(item).get(0).toString()), def);
+            return checkIsNullEmpty(Integer.parseInt(new JSONObject(status_data).get(item).toString()), def);
         }
     }
 }

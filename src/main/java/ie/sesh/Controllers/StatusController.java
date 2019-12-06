@@ -80,7 +80,7 @@ public class StatusController {
                 log.info("Created Status");
                 HttpHeaders headers = new HttpHeaders();
                 headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-                
+
                 return ResponseEntity.ok().headers(headers).body("Status Created");
             }
         }catch (Exception e){

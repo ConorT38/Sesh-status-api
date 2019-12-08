@@ -28,8 +28,8 @@ public class StatusService {
         return statusDAO.getStatus(id);
     }
 
-    public List<Status> getAllStatus(int id){
-        return statusDAO.getAllStatus(id);
+    public List<Status> getLiveFeed(int id){
+        return statusDAO.getLiveFeed(id);
     }
 
     public List<Status> getAllUserStatus(int id){

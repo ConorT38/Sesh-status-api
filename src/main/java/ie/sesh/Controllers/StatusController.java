@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequestMapping("/api/v1/")
 @RestController
 public class StatusController {
 
@@ -34,11 +35,11 @@ public class StatusController {
         return new ResponseEntity<>(statusService.getStatus(id),HttpStatus.OK);
     }
 
-    @GetMapping("/get/all/status/{user_id}")
+    @GetMapping("/live/feed/{user_id}")
     @ResponseBody
-    public ResponseEntity<List<Status>> getAllStatus(@PathVariable(name="user_id") int id) {
+    public ResponseEntity<List<Status>> getLiveFeed(@PathVariable(name="user_id") int id) {
         log.info("Get all live feed for user " + id);
-        return new ResponseEntity<>(statusService.getAllStatus(id), HttpStatus.OK);
+        return new ResponseEntity<>(statusService.getLiveFeed(id), HttpStatus.OK);
     }
 
     @GetMapping("/get/all/user/status/{user_id}")
@@ -71,7 +72,8 @@ public class StatusController {
         return new ResponseEntity<>("Failed to update status", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @PostMapping("/create/status")
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/status")
     @ResponseBody
     public ResponseEntity createStatus(@RequestBody String status_data){
         try {
@@ -80,6 +82,8 @@ public class StatusController {
                 log.info("Created Status");
                 HttpHeaders headers = new HttpHeaders();
                 headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+                headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+                headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "POST");
 
                 return ResponseEntity.ok().headers(headers).body("Status Created");
             }

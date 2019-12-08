@@ -20,8 +20,20 @@ public class SQLConstants {
     public static final String DELETE_STATUS_COMMENT = "DELETE FROM comments WHERE id=?";
     public static final String CHECK_LIKED_COMMENT = "SELECT EXISTS(SELECT 1 FROM comments_likes where user_id =? and comment_id = ?);";
 
-    public static final String GET_LIVE_FEED = "SELECT status.*,users.username,users.profile_pic, users.name FROM status INNER JOIN user_relationship ON status.user_id=user_relationship.friend_id INNER JOIN users ON users.id=status.user_id WHERE user_relationship.user_id=? AND user_relationship.type='friend' ORDER BY uploaded DESC";
-    public static final String GET_USER_POSTS = "SELECT status.*,users.username,users.profile_pic,users.name FROM status  INNER JOIN users ON users.id=status.user_id WHERE users.id=? ORDER BY uploaded DESC";
+    public static final String GET_LIVE_FEED = "SELECT status.*,users.username,users.profile_pic, users.first_name, users.last_name FROM status " +
+                                                "LEFT JOIN user_relationship " +
+                                                "ON status.user_id=user_relationship.friend_id " +
+                                                "INNER JOIN users " +
+                                                "ON users.id=status.user_id " +
+                                                "WHERE user_relationship.user_id=? AND user_relationship.type='friend' OR status.user_id=? " +
+                                                "ORDER BY uploaded DESC";
+
+    public static final String GET_USER_POSTS = "SELECT status.*,users.username,users.profile_pic,users.first_name, users.last_name " +
+                                                "FROM status  " +
+                                                "INNER JOIN users " +
+                                                "ON users.id=status.user_id " +
+                                                "WHERE users.id=? " +
+                                                "ORDER BY uploaded DESC";
 
     public static final String CHECK_USER_TOKEN = "SELECT 1 FROM user_logged_in WHERE token=? AND user_id=?";
 }

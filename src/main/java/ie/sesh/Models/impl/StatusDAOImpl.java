@@ -32,15 +32,19 @@ public class StatusDAOImpl implements StatusDAO{
         return (Status)jdbcTemplate.queryForObject(GET_STATUS_BY_ID, new Object[] {id}, new StatusMapper());
     }
 
-    public List<Status> getAllStatus(int id) {
+    public List<Status> getLiveFeed(int id) {
         log.info("Getting statuses by id "+id);
         List<Status> statuses = new ArrayList<Status>();
-        List<Map<String,Object>> statusList = jdbcTemplate.queryForList(GET_LIVE_FEED, new Object[]{id});
+        List<Map<String,Object>> statusList = jdbcTemplate.queryForList(GET_LIVE_FEED, new Object[]{id,id});
 
         for(Map status: statusList){
             Status s = new Status();
             s.setId(toIntExact((Long)(status.get("id"))));
             s.setUser_id(toIntExact((Long)(status.get("user_id"))));
+            s.setFirst_name((String) status.get("first_name"));
+            s.setLast_name((String) status.get("last_name"));
+            s.setUsername((String) status.get("username"));
+            s.setMessage((String) status.get("message"));
             s.setMessage((String) status.get("message"));
             s.setLocation((int) status.get("location"));
             s.setLikes((int)status.get("likes"));

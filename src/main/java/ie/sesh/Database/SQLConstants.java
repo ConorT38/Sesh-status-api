@@ -6,7 +6,14 @@ public class SQLConstants {
     public static final String UPDATE_STATUS = "UPDATE status SET user_id=?,message=?,location=?,likes=?,uploaded=?,going=?,maybe=?,not_going=? WHERE id=?";
     public static final String GET_STATUS_BY_ID = "SELECT * FROM status WHERE id = ?";
     public static final String GET_STATUS_BY_USERNAME= "SELECT * FROM status INNER JOIN users ON users.id=status.user_id WHERE users.username = ?";
-    public static final String DELETE_STATUS = "DELETE FROM status WHERE id=?";
+    public static final String DELETE_STATUS =  "DELETE s " +
+                                                "FROM status s " +
+                                                "INNER JOIN user_logged_in u " +
+                                                "ON s.user_id=u.user_id " +
+                                                "WHERE s.id=? " +
+                                                "AND u.user_id=? " +
+                                                "AND u.token=? " +
+                                                "AND u.logged_out IS NULL;";
     public static final String CHECK_LIKED_STATUS = "SELECT EXISTS(SELECT 1 FROM status_likes where user_id =? and status_id = ?);";
     public static final String LIKE_STATUS = "INSERT INTO status_likes(user_id, status_id) VALUES(?,?)";
     public static final String UNLIKE_STATUS = "DELETE FROM status_likes WHERE user_id=? AND status_id=?";

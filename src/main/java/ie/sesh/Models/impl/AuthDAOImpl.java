@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import static ie.sesh.Database.SQLConstants.CHECK_USER_TOKEN;
+
 @Component
 public class AuthDAOImpl implements AuthDAO {
     private static final Logger log = Logger.getLogger(AuthDAOImpl.class);

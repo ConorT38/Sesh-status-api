@@ -139,14 +139,24 @@ public class StatusDAOImpl implements StatusDAO{
         }
     }
 
-    public void deleteStatus(int id) {
+    public boolean deleteStatus(int id, int user_id, String token) {
         log.info("Deleting status");
-        KeyHolder holder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(DELETE_STATUS, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, id);
-            return ps;
-        }, holder);
+        try {
+            KeyHolder holder = new GeneratedKeyHolder();
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(DELETE_STATUS, Statement.RETURN_GENERATED_KEYS);
+                ps.setInt(1, id);
+                ps.setInt(2, user_id);
+                ps.setString(3,token);
+                return ps;
+            }, holder);
+            log.debug("Status deleted by id: "+id);
+
+            return true;
+        }catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return false;
     }
 
     public boolean checkLikedStatus(int id, int status_id) {

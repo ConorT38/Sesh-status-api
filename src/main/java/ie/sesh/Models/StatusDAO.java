@@ -10,7 +10,7 @@ public interface StatusDAO {
     List<Status> getAllUserProfileStatus(String username);
     boolean createStatus(Status status);
     void updateStatus(Status status);
-    void deleteStatus(int id);
+    boolean deleteStatus(int id, int user_id, String token);
     boolean checkLikedStatus(int id, int status_id);
     void likeStatus(int id, int status_id);
     void unlikeStatus(int id, int status_id);

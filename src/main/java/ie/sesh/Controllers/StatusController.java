@@ -28,35 +28,44 @@ public class StatusController {
     @Autowired
     StatusUtils statusUtils;
 
-    @GetMapping("/get/status/{status_id}")
+    @CrossOrigin(origins = "*")
+    @GetMapping("/status/{status_id}")
     @ResponseBody
     public ResponseEntity<Status> getStatus(@PathVariable(name="status_id") int id) {
         log.info("Get status " + id);
         return new ResponseEntity<>(statusService.getStatus(id),HttpStatus.OK);
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/live/feed/{user_id}")
     @ResponseBody
     public ResponseEntity<List<Status>> getLiveFeed(@PathVariable(name="user_id") int id) {
         log.info("Get all live feed for user " + id);
-        return new ResponseEntity<>(statusService.getLiveFeed(id), HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+        headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET");
+
+        return new ResponseEntity<>(statusService.getLiveFeed(id), headers, HttpStatus.OK);
     }
 
-    @GetMapping("/get/all/user/status/{user_id}")
+    @CrossOrigin(origins = "*")
+    @GetMapping("/user/status/{user_id}")
     @ResponseBody
     public ResponseEntity<List<Status>>  getAllUserStatus(@PathVariable(name="user_id") int id) {
         log.info("Get all statuses from user " + id);
         return new ResponseEntity<>(statusService.getAllUserStatus(id), HttpStatus.OK);
     }
 
-    @GetMapping("/get/all/user/status/@{username}")
+    @CrossOrigin(origins = "*")
+    @GetMapping("/user/status/@{username}")
     @ResponseBody
     public ResponseEntity<List<Status>>  getAllUserProfileStatus(@PathVariable("username") String username) {
         log.info("Get all statuses from user " + username);
         return new ResponseEntity<>(statusService.getAllUserProfileStatus(username), HttpStatus.OK);
     }
 
-    @PutMapping("/update/status")
+    @CrossOrigin(origins = "*")
+    @PutMapping("/status/{id}")
     @ResponseBody
     public ResponseEntity updateStatus(@RequestBody String status_data) {
         Gson gson = CommonUtils.convertDate(status_data);
@@ -72,40 +81,23 @@ public class StatusController {
         return new ResponseEntity<>("Failed to update status", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @PostMapping("/status")
     @ResponseBody
     public ResponseEntity createStatus(@RequestBody String status_data){
-        try {
             Status status = statusUtils.buildStatus(status_data);
-            if(statusService.createStatus(status, statusUtils.getUserToken(status_data))){
-                log.info("Created Status");
-                HttpHeaders headers = new HttpHeaders();
-                headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-                headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-                headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "POST");
+            return statusService.createStatus(status, statusUtils.getUserToken(status_data));
 
-                return ResponseEntity.ok().headers(headers).body("Status Created");
-            }
-        }catch (Exception e){
-            log.error(e.getMessage());
-        }
-        return new ResponseEntity<>("Status failed to Create", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @DeleteMapping("/delete/status")
+    @CrossOrigin(origins = "*")
+    @DeleteMapping("/status/{id}")
     @ResponseBody
-    public ResponseEntity deleteStatus(@RequestParam(name="id") int id) {
-        try {
-            statusService.deleteStatus(id);
-            log.info("Deleted status " + id);
-
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity deleteStatus(@PathVariable(name="id") int id, @RequestBody String user_data) {
+        return statusService.deleteStatus(id,statusUtils.getUserId(user_data),statusUtils.getUserToken(user_data));
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/check/liked/status")
     @ResponseBody
     public ResponseEntity checkLikedStatus(@RequestBody String status_data) {
@@ -124,6 +116,7 @@ public class StatusController {
         }
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/like/status")
     @ResponseBody
     public ResponseEntity likeStatus(@RequestBody String status_data){
@@ -141,6 +134,7 @@ public class StatusController {
         }
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/unlike/status")
     @ResponseBody
     public ResponseEntity unlikeStatus(@RequestBody String status_data){

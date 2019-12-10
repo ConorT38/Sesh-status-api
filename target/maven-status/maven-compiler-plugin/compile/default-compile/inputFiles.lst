@@ -16,4 +16,5 @@
 /Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Models/Comments/Comment.java
 /Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Models/Comments/impl/CommentDAOImpl.java
 /Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Controllers/Comments/CommentsController.java
+/Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Services/SecurityConfigService.java
 /Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Models/AuthDAO.java

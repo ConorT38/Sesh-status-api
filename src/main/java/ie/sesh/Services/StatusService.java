@@ -62,7 +62,7 @@ public class StatusService {
                 log.info("Created Status");
                 return ResponseEntity.ok().headers(headers).body("Status Created");
             }
-
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(headers).body("Could not create status");
         }catch (Exception e){
             log.error(e.getMessage());
         }
@@ -74,12 +74,13 @@ public class StatusService {
         try {
             if(!authenticationService.checkUserToken(token, user_id)){
                 log.error("User Token is not valid");
-                return  ResponseEntity.status(HttpStatus.FORBIDDEN).headers(headers).body("User Token is not valid");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(headers).body("User Token is not valid");
             }
             if(statusDAO.deleteStatus(status_id,user_id,token)){
                 log.info("Status deleted with id: "+status_id);
                 return ResponseEntity.ok().headers(headers).body("Status Deleted");
             }
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(headers).body("Deletion denied");
         }catch (Exception e){
             log.error(e.getMessage());
         }

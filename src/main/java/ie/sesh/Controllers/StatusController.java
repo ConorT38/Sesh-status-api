@@ -85,9 +85,8 @@ public class StatusController {
     @PostMapping("/status")
     @ResponseBody
     public ResponseEntity createStatus(@RequestBody String status_data){
-            Status status = statusUtils.buildStatus(status_data);
-            return statusService.createStatus(status, statusUtils.getUserToken(status_data));
-
+        Status status = statusUtils.buildStatus(status_data);
+        return statusService.createStatus(status, statusUtils.getUserToken(status_data));
     }
 
     @CrossOrigin(origins = "*")

@@ -143,16 +143,15 @@ public class StatusDAOImpl implements StatusDAO{
         log.info("Deleting status");
         try {
             KeyHolder holder = new GeneratedKeyHolder();
-            jdbcTemplate.update(connection -> {
+           int numberRowsAffected = jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(DELETE_STATUS, Statement.RETURN_GENERATED_KEYS);
                 ps.setInt(1, id);
                 ps.setInt(2, user_id);
                 ps.setString(3,token);
                 return ps;
             }, holder);
-            log.debug("Status deleted by id: "+id);
 
-            return true;
+            return numberRowsAffected > 0;
         }catch (Exception e) {
             log.error(e.getMessage());
         }

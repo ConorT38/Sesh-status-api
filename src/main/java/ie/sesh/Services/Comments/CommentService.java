@@ -5,6 +5,8 @@ import ie.sesh.Models.Comments.CommentDAO;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,8 +34,18 @@ public class CommentService {
         commentDAO.updateComment(comment);
     }
 
-    public void createComment(Comment comment){
-        commentDAO.createComment(comment);
+    public ResponseEntity createComment(Comment comment){
+
+        try {
+            if(!commentDAO.createComment(comment)){
+                return new ResponseEntity<>("Failed to create Comment", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            return new ResponseEntity<>("Comment created", HttpStatus.OK);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+        return new ResponseEntity<>("Failed to create Comment", HttpStatus.INTERNAL_SERVER_ERROR);
+
     }
 
     public void deleteComment(int id){

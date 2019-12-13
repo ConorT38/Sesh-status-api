@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequestMapping("/api/v1/")
 @RestController
 public class CommentsController {
     private static final Logger log = Logger.getLogger(CommentsController.class);
@@ -26,19 +27,19 @@ public class CommentsController {
     @Autowired
     CommentUtils commentUtils;
 
-    @GetMapping("/get/comment/{id}")
+    @GetMapping("/comment/{id}")
     @ResponseBody
     public ResponseEntity<Comment> getComment(@PathVariable(name="id") int id) {
         return new ResponseEntity<>(commentService.getComment(id), HttpStatus.OK);
     }
 
-    @GetMapping("/get/status/comments/{id}")
+    @GetMapping("/status/comments/{id}")
     @ResponseBody
     public ResponseEntity<List<Comment>> getAllStatusComments(@PathVariable("id") String id) {
         return new ResponseEntity<>(commentService.getAllStatusComments(Integer.parseInt(id)), HttpStatus.OK);
     }
 
-    @PutMapping("/update/comment")
+    @PutMapping("/comment/{id}")
     @ResponseBody
     public ResponseEntity updateComment(@RequestBody String comment_data) {
         Gson gson = CommonUtils.convertDate(comment_data);
@@ -47,21 +48,15 @@ public class CommentsController {
         return new ResponseEntity("Comment Updated", HttpStatus.OK);
     }
 
-    @PostMapping("/create/comment")
+    @PostMapping("/comment")
     @ResponseBody
     public ResponseEntity createComment(@RequestBody String comment_data){
         log.info("Comment: "+comment_data);
-        try {
-            Comment comment = commentUtils.buildComment(comment_data);
-            commentService.createComment(comment);
-            return new ResponseEntity<>("Comment created", HttpStatus.OK);
-        }catch (Exception e){
-            log.error(e.getMessage());
-            return new ResponseEntity<>("Failed to create Comment", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Comment comment = commentUtils.buildComment(comment_data);
+        return commentService.createComment(comment);
     }
 
-    @DeleteMapping("/delete/comment/{id}")
+    @DeleteMapping("/comment/{id}")
     @ResponseBody
     public ResponseEntity deleteComment(@PathVariable(name="id") int id) {
         commentService.deleteComment(id);

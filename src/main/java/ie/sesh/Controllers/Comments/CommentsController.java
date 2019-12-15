@@ -1,12 +1,8 @@
 package ie.sesh.Controllers.Comments;
 
-import com.google.gson.Gson;
-
-import com.google.gson.GsonBuilder;
 import ie.sesh.Models.Comments.Comment;
 import ie.sesh.Services.Comments.CommentService;
 import ie.sesh.Utils.CommentUtils;
-import ie.sesh.Utils.CommonUtils;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;

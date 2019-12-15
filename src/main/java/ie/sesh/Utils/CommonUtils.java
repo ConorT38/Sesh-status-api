@@ -26,4 +26,8 @@ public class CommonUtils {
         }
         return result;
     }
+
+    public static String[] splitAuthTokenValues(String token){
+        return token.split("\\s+", 2);
+    }
 }

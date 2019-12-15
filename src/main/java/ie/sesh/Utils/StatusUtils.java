@@ -9,9 +9,9 @@ import java.sql.Timestamp;
 public class StatusUtils {
 
     public Status buildStatus(String status_data){
-        int user_id =  CommonUtils.parseIntFromJSON(status_data,"user_id");
+        int user_id =  Integer.parseInt(CommonUtils.parseStringFromJSON(status_data,"user_id"));
         String message = CommonUtils.parseStringFromJSON(status_data,"message");
-        int location = CommonUtils.parseIntFromJSON(status_data,"location");
+        int location = Integer.parseInt(CommonUtils.parseStringFromJSON(status_data,"location"));
         Timestamp date = new Timestamp(new java.util.Date().getTime());
 
         return new Status(user_id,message,location,date);

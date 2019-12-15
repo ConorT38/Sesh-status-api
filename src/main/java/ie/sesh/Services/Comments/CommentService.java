@@ -1,5 +1,7 @@
 package ie.sesh.Services.Comments;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import ie.sesh.Models.Comments.Comment;
 import ie.sesh.Models.Comments.CommentDAO;
 
@@ -30,8 +32,19 @@ public class CommentService {
         return commentDAO.getAllStatusComments(id);
     }
 
-    public void updateComment(Comment comment){
-        commentDAO.updateComment(comment);
+    public ResponseEntity updateComment(String comment_data){
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm").create();
+        Comment comment = gson.fromJson(comment_data, Comment.class);
+        try{
+            if(!commentDAO.updateComment(comment)){
+                return new ResponseEntity<>("Failed to update Comment", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            return new ResponseEntity<>("Comment updated", HttpStatus.OK);
+        } catch (Exception e){
+            log.error(e.getMessage());
+        }
+        return new ResponseEntity<>("Failed to update Comment", HttpStatus.INTERNAL_SERVER_ERROR);
+
     }
 
     public ResponseEntity createComment(Comment comment){

@@ -2,6 +2,7 @@ package ie.sesh.Controllers;
 
 import com.google.gson.Gson;
 
+import com.google.gson.GsonBuilder;
 import ie.sesh.Models.Status;
 import ie.sesh.Services.StatusService;
 import ie.sesh.Utils.CommonUtils;
@@ -68,17 +69,7 @@ public class StatusController {
     @PutMapping("/status/{id}")
     @ResponseBody
     public ResponseEntity updateStatus(@RequestBody String status_data) {
-        Gson gson = CommonUtils.convertDate(status_data);
-        Status status = gson.fromJson(status_data, Status.class);
-        try {
-            statusService.updateStatus(status);
-            log.info("Updated status " + status.getId());
-
-            return new ResponseEntity<>("Status Updated", HttpStatus.OK);
-        }catch (Exception e){
-            log.error(e.getMessage());
-        }
-        return new ResponseEntity<>("Failed to update status", HttpStatus.INTERNAL_SERVER_ERROR);
+       return statusService.updateStatus(status_data);
     }
 
     @CrossOrigin(origins = "*")

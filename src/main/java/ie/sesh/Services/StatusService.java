@@ -1,6 +1,8 @@
 package ie.sesh.Services;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import ie.sesh.Models.Status;
 import ie.sesh.Models.StatusDAO;
 
@@ -46,8 +48,20 @@ public class StatusService {
         return statusDAO.getAllUserProfileStatus(username);
     }
 
-    public void updateStatus(Status status){
-        statusDAO.updateStatus(status);
+    public ResponseEntity updateStatus(String status_data){
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm").create();
+        Status status = gson.fromJson(status_data, Status.class);
+        try {
+            if(!statusDAO.updateStatus(status)){
+                return new ResponseEntity<>("Failed to update status", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            log.info("Updated status " + status.getId());
+            return new ResponseEntity<>("Status Updated", HttpStatus.OK);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+        return new ResponseEntity<>("Failed to update status", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public ResponseEntity createStatus(Status status, String token){

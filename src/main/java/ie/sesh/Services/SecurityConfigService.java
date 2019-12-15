@@ -10,7 +10,7 @@ public class SecurityConfigService {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
         headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-        headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "POST");
+        headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "POST, DELETE, PUT, GET");
 
         return headers;
     }

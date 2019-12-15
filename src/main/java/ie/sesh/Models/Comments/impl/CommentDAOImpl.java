@@ -52,18 +52,23 @@ public class CommentDAOImpl implements CommentDAO{
         return comments;
     }
 
-    public void updateComment(Comment comment) {
+    public boolean updateComment(Comment comment) {
         log.info("Updating comment");
         KeyHolder holder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(UPDATE_STATUS_COMMENT, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, comment.getUser_id());
-            ps.setInt(2, comment.getStatus_id());
-            ps.setString(3, comment.getMessage());
-            ps.setInt(4, comment.getLikes());
-            ps.setTimestamp(5, comment.getDate());
-            return ps;
-        }, holder);
+        try{
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(UPDATE_STATUS_COMMENT, Statement.RETURN_GENERATED_KEYS);
+                ps.setInt(1, comment.getUser_id());
+                ps.setInt(2, comment.getStatus_id());
+                ps.setString(3, comment.getMessage());
+                ps.setInt(4, comment.getLikes());
+                return ps;
+            }, holder);
+            return true;
+        } catch (Exception e){
+            log.error(e.getMessage());
+        }
+        return false;
     }
 
     public boolean createComment(Comment comment) {

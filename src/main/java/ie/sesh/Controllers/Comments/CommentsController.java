@@ -2,6 +2,7 @@ package ie.sesh.Controllers.Comments;
 
 import com.google.gson.Gson;
 
+import com.google.gson.GsonBuilder;
 import ie.sesh.Models.Comments.Comment;
 import ie.sesh.Services.Comments.CommentService;
 import ie.sesh.Utils.CommentUtils;
@@ -42,10 +43,7 @@ public class CommentsController {
     @PutMapping("/comment/{id}")
     @ResponseBody
     public ResponseEntity updateComment(@RequestBody String comment_data) {
-        Gson gson = CommonUtils.convertDate(comment_data);
-        Comment comment = gson.fromJson(comment_data, Comment.class);
-        commentService.updateComment(comment);
-        return new ResponseEntity("Comment Updated", HttpStatus.OK);
+       return commentService.updateComment(comment_data);
     }
 
     @PostMapping("/comment")

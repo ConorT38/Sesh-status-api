@@ -21,7 +21,7 @@ public class SQLConstants {
     public static final String UNLIKE_STATUS_DECREMENT = "CALL unlikeStatus(?)";
 
     public static final String INSERT_STATUS_COMMENT = "INSERT INTO comments (user_id, status_id, message, uploaded) VALUES(?,?,?, NOW());";
-    public static final String UPDATE_STATUS_COMMENT = "UPDATE comments SET status_id,user_id=?,message=?,likes=?,uploaded=? WHERE id=?";
+    public static final String UPDATE_STATUS_COMMENT = "UPDATE comments SET status_id,user_id=?,message=?,likes=? WHERE id=?";
     public static final String GET_STATUS_COMMENT_BY_ID = "SELECT * FROM comments WHERE id = ?";
     public static final String GET_ALL_STATUS_COMMENTS_BY_ID = "SELECT * FROM comments INNER JOIN users ON comments.user_id=users.id WHERE comments.status_id = ?";
     public static final String DELETE_STATUS_COMMENT = "DELETE FROM comments WHERE id=?";

@@ -102,22 +102,28 @@ public class StatusDAOImpl implements StatusDAO{
         return statuses;
     }
 
-    public void updateStatus(Status status) {
+    public boolean updateStatus(Status status) {
         log.info("Updating status");
         KeyHolder holder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(UPDATE_STATUS, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, status.getUser_id());
-            ps.setString(2, status.getMessage());
-            ps.setInt(3, status.getLocation());
-            ps.setInt(4, status.getLikes());
-            ps.setTimestamp(5, status.getDate());
-            ps.setString(6, status.getGoing());
-            ps.setString(7, status.getMaybe());
-            ps.setString(8, status.getNot_going());
-            ps.setInt(9, status.getId());
-            return ps;
-        }, holder);
+        try{
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(UPDATE_STATUS, Statement.RETURN_GENERATED_KEYS);
+                ps.setInt(1, status.getUser_id());
+                ps.setString(2, status.getMessage());
+                ps.setInt(3, status.getLocation());
+                ps.setInt(4, status.getLikes());
+                ps.setTimestamp(5, status.getDate());
+                ps.setString(6, status.getGoing());
+                ps.setString(7, status.getMaybe());
+                ps.setString(8, status.getNot_going());
+                ps.setInt(9, status.getId());
+                return ps;
+            }, holder);
+            return true;
+        } catch (Exception e){
+            log.error(e.getMessage());
+        }
+        return false;
     }
 
     public boolean createStatus(Status status) {

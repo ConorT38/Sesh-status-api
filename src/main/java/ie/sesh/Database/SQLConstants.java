@@ -33,7 +33,19 @@ public class SQLConstants {
                                                 "INNER JOIN users " +
                                                 "ON users.id=status.user_id " +
                                                 "WHERE user_relationship.user_id=? AND user_relationship.type='friend' OR status.user_id=? " +
-                                                "ORDER BY uploaded DESC";
+                                                "ORDER BY uploaded DESC " +
+                                                "LIMIT 20";
+
+    public static final String GET_LIVE_FEED_OLDER = "SELECT status.*,users.username,users.profile_pic, users.first_name, users.last_name FROM status " +
+                                                     "LEFT JOIN user_relationship " +
+                                                     "ON status.user_id=user_relationship.friend_id " +
+                                                     "INNER JOIN users " +
+                                                     "ON users.id=status.user_id " +
+                                                     "WHERE user_relationship.user_id=? " +
+                                                     "AND user_relationship.type='friend' OR status.user_id=?  " +
+                                                     "AND id < ?" +
+                                                     "ORDER BY uploaded DESC " +
+                                                     "LIMIT 20";
 
     public static final String GET_USER_POSTS = "SELECT status.*,users.username,users.profile_pic,users.first_name, users.last_name " +
                                                 "FROM status  " +

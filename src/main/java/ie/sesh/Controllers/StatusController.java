@@ -1,8 +1,5 @@
 package ie.sesh.Controllers;
 
-import com.google.gson.Gson;
-
-import com.google.gson.GsonBuilder;
 import ie.sesh.Models.Status;
 import ie.sesh.Services.StatusService;
 import ie.sesh.Utils.CommonUtils;
@@ -29,6 +26,7 @@ public class StatusController {
     @Autowired
     StatusUtils statusUtils;
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/status/{status_id}")
     @ResponseBody
     public ResponseEntity<Status> getStatus(@PathVariable(name="status_id") int id, @RequestHeader HttpHeaders headers) {
@@ -36,6 +34,7 @@ public class StatusController {
         return new ResponseEntity<>(statusService.getStatus(id),HttpStatus.OK);
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/live/feed/{user_id}")
     @ResponseBody
     public ResponseEntity<List<Status>> getLiveFeed(@PathVariable(name="user_id") int id, @RequestHeader HttpHeaders headers) {
@@ -44,26 +43,33 @@ public class StatusController {
         return statusService.getLiveFeed(id,user_token);
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/user/status/{user_id}")
     @ResponseBody
     public ResponseEntity<List<Status>>  getAllUserStatus(@PathVariable(name="user_id") int id, @RequestHeader HttpHeaders headers) {
         log.info("Get all statuses from user " + id);
+        String user_token = headers.getFirst("Authorization");
         return new ResponseEntity<>(statusService.getAllUserStatus(id), HttpStatus.OK);
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/user/status/@{username}")
     @ResponseBody
     public ResponseEntity<List<Status>>  getAllUserProfileStatus(@PathVariable("username") String username, @RequestHeader HttpHeaders headers) {
         log.info("Get all statuses from user " + username);
+        String user_token = headers.getFirst("Authorization");
         return new ResponseEntity<>(statusService.getAllUserProfileStatus(username), HttpStatus.OK);
     }
 
+    @CrossOrigin(origins = "*")
     @PutMapping("/status/{id}")
     @ResponseBody
-    public ResponseEntity updateStatus(@RequestBody String status_data) {
-       return statusService.updateStatus(status_data);
+    public ResponseEntity updateStatus(@RequestBody String status_data, @RequestHeader HttpHeaders headers) {
+        String user_token = headers.getFirst("Authorization");
+        return statusService.updateStatus(status_data);
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/status")
     @ResponseBody
     public ResponseEntity createStatus(@RequestBody String status_data, @RequestHeader HttpHeaders headers){
@@ -72,16 +78,20 @@ public class StatusController {
         return statusService.createStatus(status, user_token);
     }
 
+    @CrossOrigin(origins = "*")
     @DeleteMapping("/status/{id}")
     @ResponseBody
     public ResponseEntity deleteStatus(@PathVariable(name="id") int id, @RequestHeader HttpHeaders headers) {
         String user_token = headers.getFirst("Authorization");
+        log.debug("User Token: "+user_token);
         return statusService.deleteStatus(id,user_token);
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/check/liked/status")
     @ResponseBody
     public ResponseEntity checkLikedStatus(@RequestBody String status_data, @RequestHeader HttpHeaders headers) {
+        String user_token = headers.getFirst("Authorization");
         int id = CommonUtils.parseIntFromJSON(status_data,"id");
         int status_id = CommonUtils.parseIntFromJSON(status_data,"status_id");
 
@@ -97,9 +107,11 @@ public class StatusController {
         }
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/like/status")
     @ResponseBody
     public ResponseEntity likeStatus(@RequestBody String status_data, @RequestHeader HttpHeaders headers){
+        String user_token = headers.getFirst("Authorization");
         int id = CommonUtils.parseIntFromJSON(status_data,"id");
         int status_id = CommonUtils.parseIntFromJSON(status_data,"status_id");
 
@@ -114,9 +126,11 @@ public class StatusController {
         }
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/unlike/status")
     @ResponseBody
     public ResponseEntity unlikeStatus(@RequestBody String status_data, @RequestHeader HttpHeaders headers){
+        String user_token = headers.getFirst("Authorization");
         int id = CommonUtils.parseIntFromJSON(status_data,"id");
         int status_id = CommonUtils.parseIntFromJSON(status_data,"status_id");
 

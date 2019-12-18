@@ -146,7 +146,7 @@ public class StatusDAOImpl implements StatusDAO{
     }
 
     public boolean deleteStatus(int id, int user_id, String token) {
-        log.info("Deleting status");
+        log.info("Deleting status with id: "+id+" , user_id: "+user_id+", token: "+token);
         try {
             KeyHolder holder = new GeneratedKeyHolder();
            int numberRowsAffected = jdbcTemplate.update(connection -> {

@@ -47,7 +47,7 @@ public class StatusService {
 
         try {
             if(!authenticationService.checkUserToken(user_token, user_id)){
-                log.error("User Token is not valid");
+                log.info("User Token is not valid");
                 return  ResponseEntity.status(HttpStatus.FORBIDDEN).headers(securityConfigService.getHttpHeaders()).body("User Token is not valid");
             }
             liveFeed = statusDAO.getLiveFeed(id);
@@ -88,13 +88,19 @@ public class StatusService {
     }
 
     public ResponseEntity createStatus(Status status, String token){
+        HttpHeaders headers = securityConfigService.getHttpHeaders();
         String[] auth_arr = CommonUtils.splitAuthTokenValues(token);
+
+        if(auth_arr == null || auth_arr.length < 1){
+            log.error("User Token is not valid");
+            return  ResponseEntity.status(HttpStatus.FORBIDDEN).headers(headers).body("User Token is not valid");
+        }
+
         int user_id = Integer.parseInt(auth_arr[0]);
         String user_token = auth_arr[1];
-        HttpHeaders headers = securityConfigService.getHttpHeaders();
         try {
             if(!authenticationService.checkUserToken(user_token, user_id)){
-                log.error("User Token is not valid");
+                log.info("User Token is not valid");
                 return  ResponseEntity.status(HttpStatus.FORBIDDEN).headers(headers).body("User Token is not valid");
             }
 
@@ -116,17 +122,19 @@ public class StatusService {
 
         try {
             if(!authenticationService.checkUserToken(user_token,user_id)){
-                log.error("User Token is not valid");
+                log.info("User Token is not valid");
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(securityConfigService.getHttpHeaders()).body("User Token is not valid");
             }
-            if(statusDAO.deleteStatus(status_id,user_id,token)){
+            if(statusDAO.deleteStatus(status_id,user_id,user_token)){
                 log.info("Status deleted with id: "+status_id);
                 return ResponseEntity.ok().headers(securityConfigService.getHttpHeaders()).body("Status Deleted");
             }
+            log.info("User not allowed to delete status");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(securityConfigService.getHttpHeaders()).body("Deletion denied");
         }catch (Exception e){
             log.error(e.getMessage());
         }
+        log.debug("Could not delete Status: "+status_id);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(securityConfigService.getHttpHeaders()).body("Failed to delete Status");
 
     }

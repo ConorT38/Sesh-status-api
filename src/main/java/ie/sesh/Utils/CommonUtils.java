@@ -28,6 +28,9 @@ public class CommonUtils {
     }
 
     public static String[] splitAuthTokenValues(String token){
-        return token.split("\\s+", 2);
+        if (token != null || !token.isEmpty()) {
+            return token.split("\\s+", 2);
+        }
+        return null;
     }
 }

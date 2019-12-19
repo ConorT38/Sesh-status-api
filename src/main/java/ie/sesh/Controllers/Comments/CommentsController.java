@@ -7,6 +7,7 @@ import ie.sesh.Utils.CommentUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,33 +23,41 @@ public class CommentsController {
 
   @Autowired CommentUtils commentUtils;
 
+  @CrossOrigin(origins = "*")
   @GetMapping("/comment/{id}")
   @ResponseBody
   public ResponseEntity<Comment> getComment(@PathVariable(name = "id") int id) {
     return new ResponseEntity<>(commentService.getComment(id), HttpStatus.OK);
   }
 
-  @GetMapping("/status/comments/{id}")
+  @CrossOrigin(origins = "*")
+  @GetMapping("/comments/{id}")
   @ResponseBody
-  public ResponseEntity<List<Comment>> getAllStatusComments(@PathVariable("id") String id) {
-    return new ResponseEntity<>(
-        commentService.getAllStatusComments(Integer.parseInt(id)), HttpStatus.OK);
+  public ResponseEntity<List<Comment>> getAllStatusComments(
+      @PathVariable("id") String id, @RequestHeader HttpHeaders headers) {
+    String user_token = headers.getFirst("Authorization");
+    return commentService.getAllStatusComments(Integer.parseInt(id), user_token);
   }
 
+  @CrossOrigin(origins = "*")
   @PutMapping("/comment/{id}")
   @ResponseBody
   public ResponseEntity updateComment(@RequestBody String comment_data) {
     return commentService.updateComment(comment_data);
   }
 
+  @CrossOrigin(origins = "*")
   @PostMapping("/comment")
   @ResponseBody
-  public ResponseEntity createComment(@RequestBody String comment_data) {
+  public ResponseEntity createComment(
+      @RequestBody String comment_data, @RequestHeader HttpHeaders headers) {
     log.info("Comment: " + comment_data);
     Comment comment = commentUtils.buildComment(comment_data);
-    return commentService.createComment(comment);
+    String user_token = headers.getFirst("Authorization");
+    return commentService.createComment(comment, user_token);
   }
 
+  @CrossOrigin(origins = "*")
   @DeleteMapping("/comment/{id}")
   @ResponseBody
   public ResponseEntity deleteComment(@PathVariable(name = "id") int id) {
@@ -56,6 +65,7 @@ public class CommentsController {
     return new ResponseEntity<>("Comment Deleted", HttpStatus.OK);
   }
 
+  @CrossOrigin(origins = "*")
   @PostMapping("/check/liked/comment")
   @ResponseBody
   public ResponseEntity checkLikedComment(@RequestBody String comment_data) {

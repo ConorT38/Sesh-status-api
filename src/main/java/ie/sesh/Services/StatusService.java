@@ -58,7 +58,7 @@ public class StatusService {
     }
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .headers(securityConfigService.getHttpHeaders())
-        .body("Status failed to Create");
+        .body("Failed to get Live feed");
   }
 
   public List<Status> getAllUserStatus(int id) {

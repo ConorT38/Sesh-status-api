@@ -5,6 +5,10 @@ import com.google.gson.GsonBuilder;
 import ie.sesh.Models.Comments.Comment;
 import ie.sesh.Models.Comments.CommentDAO;
 
+import ie.sesh.Models.Status;
+import ie.sesh.Services.AuthenticationService;
+import ie.sesh.Services.SecurityConfigService;
+import ie.sesh.Utils.CommonUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,14 +24,48 @@ public class CommentService {
 
   @Autowired CommentDAO commentDAO;
 
+  @Autowired AuthenticationService authenticationService;
+
+  @Autowired SecurityConfigService securityConfigService;
+
   public CommentService() {}
 
   public Comment getComment(int id) {
     return commentDAO.getComment(id);
   }
 
-  public List<Comment> getAllStatusComments(int id) {
-    return commentDAO.getAllStatusComments(id);
+  public ResponseEntity getAllStatusComments(int id, String token) {
+    // return commentDAO.getAllStatusComments(id);
+
+    List<Comment> commentFeed;
+    String[] auth_arr = CommonUtils.splitAuthTokenValues(token);
+    int user_id = Integer.parseInt(auth_arr[0]);
+    String user_token = auth_arr[1];
+
+    try {
+      if (!authenticationService.checkUserToken(user_token, user_id)) {
+        log.info("User Token is not valid");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .headers(securityConfigService.getHttpHeaders())
+            .body("User Token is not valid");
+      }
+
+      commentFeed = commentDAO.getAllStatusComments(id);
+      if (commentFeed != null) {
+        log.info("Getting comments feed for " + id);
+        return ResponseEntity.ok()
+            .headers(securityConfigService.getHttpHeaders())
+            .body(commentFeed);
+      }
+      return ResponseEntity.status(HttpStatus.FORBIDDEN)
+          .headers(securityConfigService.getHttpHeaders())
+          .body("Could not get Comment Feed");
+    } catch (Exception e) {
+      log.error(e.getMessage());
+    }
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .headers(securityConfigService.getHttpHeaders())
+        .body("Failed to get Comments");
   }
 
   public ResponseEntity updateComment(String comment_data) {
@@ -44,9 +82,18 @@ public class CommentService {
     return new ResponseEntity<>("Failed to update Comment", HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  public ResponseEntity createComment(Comment comment) {
+  public ResponseEntity createComment(Comment comment, String token) {
+    String[] auth_arr = CommonUtils.splitAuthTokenValues(token);
+    int user_id = Integer.parseInt(auth_arr[0]);
+    String user_token = auth_arr[1];
 
     try {
+      if (!authenticationService.checkUserToken(user_token, user_id)) {
+        log.info("User Token is not valid");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .headers(securityConfigService.getHttpHeaders())
+            .body("User Token is not valid");
+      }
       if (!commentDAO.createComment(comment)) {
         return new ResponseEntity<>("Failed to create Comment", HttpStatus.INTERNAL_SERVER_ERROR);
       }

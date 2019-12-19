@@ -16,56 +16,52 @@ import java.util.List;
 @Service
 public class CommentService {
 
-    private static final Logger log = Logger.getLogger(CommentService.class);
+  private static final Logger log = Logger.getLogger(CommentService.class);
 
-    @Autowired
-    CommentDAO commentDAO;
+  @Autowired CommentDAO commentDAO;
 
-    public CommentService() {
-    }
+  public CommentService() {}
 
-    public Comment getComment(int id){
-        return commentDAO.getComment(id);
-    }
+  public Comment getComment(int id) {
+    return commentDAO.getComment(id);
+  }
 
-    public List<Comment> getAllStatusComments(int id){
-        return commentDAO.getAllStatusComments(id);
-    }
+  public List<Comment> getAllStatusComments(int id) {
+    return commentDAO.getAllStatusComments(id);
+  }
 
-    public ResponseEntity updateComment(String comment_data){
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm").create();
-        Comment comment = gson.fromJson(comment_data, Comment.class);
-        try{
-            if(!commentDAO.updateComment(comment)){
-                return new ResponseEntity<>("Failed to update Comment", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-            return new ResponseEntity<>("Comment updated", HttpStatus.OK);
-        } catch (Exception e){
-            log.error(e.getMessage());
-        }
+  public ResponseEntity updateComment(String comment_data) {
+    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm").create();
+    Comment comment = gson.fromJson(comment_data, Comment.class);
+    try {
+      if (!commentDAO.updateComment(comment)) {
         return new ResponseEntity<>("Failed to update Comment", HttpStatus.INTERNAL_SERVER_ERROR);
-
+      }
+      return new ResponseEntity<>("Comment updated", HttpStatus.OK);
+    } catch (Exception e) {
+      log.error(e.getMessage());
     }
+    return new ResponseEntity<>("Failed to update Comment", HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 
-    public ResponseEntity createComment(Comment comment){
+  public ResponseEntity createComment(Comment comment) {
 
-        try {
-            if(!commentDAO.createComment(comment)){
-                return new ResponseEntity<>("Failed to create Comment", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-            return new ResponseEntity<>("Comment created", HttpStatus.OK);
-        }catch (Exception e){
-            log.error(e.getMessage());
-        }
+    try {
+      if (!commentDAO.createComment(comment)) {
         return new ResponseEntity<>("Failed to create Comment", HttpStatus.INTERNAL_SERVER_ERROR);
-
+      }
+      return new ResponseEntity<>("Comment created", HttpStatus.OK);
+    } catch (Exception e) {
+      log.error(e.getMessage());
     }
+    return new ResponseEntity<>("Failed to create Comment", HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 
-    public void deleteComment(int id){
-        commentDAO.deleteComment(id);
-    }
+  public void deleteComment(int id) {
+    commentDAO.deleteComment(id);
+  }
 
-    public boolean checkLikedComment(int id, int comment_id){
-        return commentDAO.checkLikedComment(id,comment_id);
-    }
+  public boolean checkLikedComment(int id, int comment_id) {
+    return commentDAO.checkLikedComment(id, comment_id);
+  }
 }

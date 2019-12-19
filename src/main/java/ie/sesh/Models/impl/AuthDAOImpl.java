@@ -11,20 +11,20 @@ import static ie.sesh.Database.SQLConstants.CHECK_USER_TOKEN;
 
 @Component
 public class AuthDAOImpl implements AuthDAO {
-    private static final Logger log = Logger.getLogger(AuthDAOImpl.class);
+  private static final Logger log = Logger.getLogger(AuthDAOImpl.class);
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+  @Autowired private JdbcTemplate jdbcTemplate;
 
-    public boolean checkUserToken(String token, int user_id){
-        log.info("Checking user exists by token: "+token);
-        try{
-            int result = jdbcTemplate.queryForObject(CHECK_USER_TOKEN, new Object[] { token, user_id }, Integer.class);
-            return result > 0;
-        }catch (DataAccessException e){
-            log.error(e.getMessage());
-            return false;
-        }
+  public boolean checkUserToken(String token, int user_id) {
+    log.info("Checking user exists by token: " + token);
+    try {
+      int result =
+          jdbcTemplate.queryForObject(
+              CHECK_USER_TOKEN, new Object[] {token, user_id}, Integer.class);
+      return result > 0;
+    } catch (DataAccessException e) {
+      log.error(e.getMessage());
+      return false;
     }
-
+  }
 }

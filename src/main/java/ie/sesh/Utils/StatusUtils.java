@@ -8,19 +8,20 @@ import java.sql.Timestamp;
 @Component
 public class StatusUtils {
 
-    public Status buildStatus(String status_data){
-        int user_id =  Integer.parseInt(CommonUtils.parseStringFromJSON(status_data,"user_id"));
-        String message = CommonUtils.parseStringFromJSON(status_data,"message");
-        int location = Integer.parseInt(CommonUtils.parseStringFromJSON(status_data,"location"));
-        Timestamp date = new Timestamp(new java.util.Date().getTime());
+  public Status buildStatus(String status_data) {
+    int user_id = Integer.parseInt(CommonUtils.parseStringFromJSON(status_data, "user_id"));
+    String message = CommonUtils.parseStringFromJSON(status_data, "message");
+    int location = Integer.parseInt(CommonUtils.parseStringFromJSON(status_data, "location"));
+    Timestamp date = new Timestamp(new java.util.Date().getTime());
 
-        return new Status(user_id,message,location,date);
-    }
+    return new Status(user_id, message, location, date);
+  }
 
-    public String getUserToken(String data){
-        return CommonUtils.parseStringFromJSON(data,"user_token");
-    }
-    public int getUserId(String data){ return  CommonUtils.parseIntFromJSON(data,"user_id");
-    }
+  public String getUserToken(String data) {
+    return CommonUtils.parseStringFromJSON(data, "user_token");
+  }
 
-    }
+  public int getUserId(String data) {
+    return CommonUtils.parseIntFromJSON(data, "user_id");
+  }
+}

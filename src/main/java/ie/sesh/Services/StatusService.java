@@ -62,7 +62,7 @@ public class StatusService {
   }
 
   public List<Status> getAllUserStatus(int id) {
-    return statusDAO.gsetAllUserStatus(id);
+    return statusDAO.getAllUserStatus(id);
   }
 
   public List<Status> getAllUserProfileStatus(String username) {

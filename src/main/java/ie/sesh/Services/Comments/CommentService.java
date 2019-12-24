@@ -35,7 +35,6 @@ public class CommentService {
   }
 
   public ResponseEntity getAllStatusComments(int id, String token) {
-    // return commentDAO.getAllStatusComments(id);
 
     List<Comment> commentFeed;
     String[] auth_arr = CommonUtils.splitAuthTokenValues(token);

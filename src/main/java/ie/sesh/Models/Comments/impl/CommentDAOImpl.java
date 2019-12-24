@@ -28,7 +28,7 @@ public class CommentDAOImpl implements CommentDAO {
   @Autowired private JdbcTemplate jdbcTemplate;
 
   public Comment getComment(int id) {
-    log.info("Getting comment");
+    log.info("Getting comment: " + id);
     return (Comment)
         jdbcTemplate.queryForObject(
             GET_STATUS_COMMENT_BY_ID, new Object[] {id}, new CommentMapper());
@@ -44,7 +44,7 @@ public class CommentDAOImpl implements CommentDAO {
       Comment c = new Comment();
       c.setId(toIntExact((Long) (comment.get("id"))));
       c.setUser_id(toIntExact((Long) (comment.get("user_id"))));
-      c.setName((String) comment.get("name"));
+      c.setName(comment.get("first_name") + " " + comment.get("last_name"));
       c.setUsername((String) comment.get("username"));
       c.setMessage((String) comment.get("message"));
       c.setLikes((int) comment.get("likes"));
@@ -55,7 +55,7 @@ public class CommentDAOImpl implements CommentDAO {
   }
 
   public boolean updateComment(Comment comment) {
-    log.info("Updating comment");
+    log.info("Updating comment: " + comment.getId());
     KeyHolder holder = new GeneratedKeyHolder();
     try {
       jdbcTemplate.update(
@@ -77,7 +77,7 @@ public class CommentDAOImpl implements CommentDAO {
   }
 
   public boolean createComment(Comment comment) {
-    log.info("Inserting comment");
+    log.info("Inserting comment into status: " + comment.getStatus_id());
     KeyHolder holder = new GeneratedKeyHolder();
     try {
       jdbcTemplate.update(
@@ -98,7 +98,7 @@ public class CommentDAOImpl implements CommentDAO {
   }
 
   public void deleteComment(int id) {
-    log.info("Deleting comment");
+    log.info("Deleting comment: " + id);
     KeyHolder holder = new GeneratedKeyHolder();
     jdbcTemplate.update(
         connection -> {

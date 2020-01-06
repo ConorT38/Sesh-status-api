@@ -1,4 +1,5 @@
 /Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Utils/CommentUtils.java
+/Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Models/Token.java
 /Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Utils/CommonUtils.java
 /Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Models/StatusDAO.java
 /Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Models/Comments/CommentDAO.java
@@ -9,6 +10,7 @@
 /Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Controllers/StatusController.java
 /Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Application.java
 /Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Models/impl/StatusDAOImpl.java
+/Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Utils/AuthUtils.java
 /Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Services/AuthenticationService.java
 /Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Database/SQLConstants.java
 /Users/conor/Projects/Sesh-status-api/src/main/java/ie/sesh/Utils/StatusUtils.java

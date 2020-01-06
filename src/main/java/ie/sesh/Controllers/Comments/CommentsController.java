@@ -1,7 +1,9 @@
 package ie.sesh.Controllers.Comments;
 
 import ie.sesh.Models.Comments.Comment;
+import ie.sesh.Models.Token;
 import ie.sesh.Services.Comments.CommentService;
+import ie.sesh.Utils.AuthUtils;
 import ie.sesh.Utils.CommentUtils;
 
 import org.apache.log4j.Logger;
@@ -35,8 +37,8 @@ public class CommentsController {
   @ResponseBody
   public ResponseEntity<List<Comment>> getAllStatusComments(
       @PathVariable("id") String id, @RequestHeader HttpHeaders headers) {
-    String user_token = headers.getFirst("Authorization");
-    return commentService.getAllStatusComments(Integer.parseInt(id), user_token);
+    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
+    return commentService.getAllStatusComments(Integer.parseInt(id), token);
   }
 
   @CrossOrigin(origins = "*")
@@ -53,8 +55,8 @@ public class CommentsController {
       @RequestBody String comment_data, @RequestHeader HttpHeaders headers) {
     log.info("Comment: " + comment_data);
     Comment comment = commentUtils.buildComment(comment_data);
-    String user_token = headers.getFirst("Authorization");
-    return commentService.createComment(comment, user_token);
+    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
+    return commentService.createComment(comment, token);
   }
 
   @CrossOrigin(origins = "*")

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import ie.sesh.Models.Status;
 import ie.sesh.Models.StatusDAO;
+import ie.sesh.Models.Token;
 import ie.sesh.Utils.CommonUtils;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -30,7 +31,7 @@ public class StatusService {
     return statusDAO.getStatus(id);
   }
 
-  public ResponseEntity getLiveFeed(int id, String token) {
+  public ResponseEntity getLiveFeed(int id, Token token) {
     List<Status> liveFeed;
 
     try {
@@ -40,7 +41,7 @@ public class StatusService {
             .headers(securityConfigService.getHttpHeaders())
             .body("User Token is not valid");
       }
-      liveFeed = statusDAO.getLiveFeed(id);
+      liveFeed = statusDAO.getLiveFeed(id, token.getUserToken());
 
       if (liveFeed != null) {
         log.info("Getting live feed for " + id);
@@ -58,12 +59,32 @@ public class StatusService {
         .body("Failed to get Live feed");
   }
 
-  public List<Status> getAllUserStatus(int id) {
-    return statusDAO.getAllUserStatus(id);
-  }
+  public ResponseEntity getProfileLiveFeed(String username, Token token) {
+    List<Status> liveFeed;
 
-  public List<Status> getAllUserProfileStatus(String username) {
-    return statusDAO.getAllUserProfileStatus(username);
+    try {
+      if (!authenticationService.checkUserToken(token)) {
+        log.info("User Token is not valid");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .headers(securityConfigService.getHttpHeaders())
+            .body("User Token is not valid");
+      }
+      liveFeed = statusDAO.getProfileLiveFeed(username);
+
+      if (liveFeed != null) {
+        log.info("Getting live feed for " + username);
+        return ResponseEntity.ok().headers(securityConfigService.getHttpHeaders()).body(liveFeed);
+      }
+
+      return ResponseEntity.status(HttpStatus.FORBIDDEN)
+          .headers(securityConfigService.getHttpHeaders())
+          .body("Could not get Live Feed");
+    } catch (Exception e) {
+      log.error(e.getMessage());
+    }
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .headers(securityConfigService.getHttpHeaders())
+        .body("Failed to get Live feed");
   }
 
   public ResponseEntity updateStatus(String status_data) {
@@ -82,7 +103,7 @@ public class StatusService {
     return new ResponseEntity<>("Failed to update status", HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  public ResponseEntity createStatus(Status status, String token) {
+  public ResponseEntity createStatus(Status status, Token token) {
     HttpHeaders headers = securityConfigService.getHttpHeaders();
 
     try {
@@ -108,10 +129,7 @@ public class StatusService {
         .body("Status failed to Create");
   }
 
-  public ResponseEntity deleteStatus(int status_id, String token) {
-    String[] auth_arr = CommonUtils.splitAuthTokenValues(token);
-    int user_id = Integer.parseInt(auth_arr[0]);
-    String user_token = auth_arr[1];
+  public ResponseEntity deleteStatus(int status_id, Token token) {
 
     try {
       if (!authenticationService.checkUserToken(token)) {
@@ -120,7 +138,7 @@ public class StatusService {
             .headers(securityConfigService.getHttpHeaders())
             .body("User Token is not valid");
       }
-      if (statusDAO.deleteStatus(status_id, user_id, user_token)) {
+      if (statusDAO.deleteStatus(status_id, token.getUserId(), token.getUserToken())) {
         log.info("Status deleted with id: " + status_id);
         return ResponseEntity.ok()
             .headers(securityConfigService.getHttpHeaders())
@@ -143,11 +161,7 @@ public class StatusService {
     return statusDAO.checkLikedStatus(id, status_id);
   }
 
-  public ResponseEntity likeStatus(int status_id, String token) {
-    String[] auth_arr = CommonUtils.splitAuthTokenValues(token);
-    int user_id = Integer.parseInt(auth_arr[0]);
-    String user_token = auth_arr[1];
-
+  public ResponseEntity likeStatus(int status_id, Token token) {
     try {
       if (!authenticationService.checkUserToken(token)) {
         log.info("User Token is not valid");
@@ -155,8 +169,8 @@ public class StatusService {
             .headers(securityConfigService.getHttpHeaders())
             .body("User Token is not valid");
       }
-      if (statusDAO.likeStatus(user_id, status_id, user_token)) {
-        log.info("Status Liked with id: " + status_id + " by User: " + user_id);
+      if (statusDAO.likeStatus(token.getUserId(), status_id, token.getUserToken())) {
+        log.info("Status Liked with id: " + status_id + " by User: " + token.getUserId());
         return ResponseEntity.ok()
             .headers(securityConfigService.getHttpHeaders())
             .body("Status Liked");
@@ -174,11 +188,7 @@ public class StatusService {
         .body("Failed to Like Status");
   }
 
-  public ResponseEntity unlikeStatus(int status_id, String token) {
-    String[] auth_arr = CommonUtils.splitAuthTokenValues(token);
-    int user_id = Integer.parseInt(auth_arr[0]);
-    String user_token = auth_arr[1];
-
+  public ResponseEntity unlikeStatus(int status_id, Token token) {
     try {
       if (!authenticationService.checkUserToken(token)) {
         log.info("User Token is not valid");
@@ -186,8 +196,8 @@ public class StatusService {
             .headers(securityConfigService.getHttpHeaders())
             .body("User Token is not valid");
       }
-      if (statusDAO.unlikeStatus(user_id, status_id, user_token)) {
-        log.info("Status Unliked with id: " + status_id + " by User: " + user_id);
+      if (statusDAO.unlikeStatus(token.getUserId(), status_id, token.getUserToken())) {
+        log.info("Status Unliked with id: " + status_id + " by User: " + token.getUserId());
         return ResponseEntity.ok()
             .headers(securityConfigService.getHttpHeaders())
             .body("Status Liked");

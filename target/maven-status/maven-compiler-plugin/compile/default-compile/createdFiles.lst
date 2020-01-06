@@ -1,9 +1,11 @@
 ie/sesh/Services/AuthenticationService.class
 ie/sesh/Models/impl/StatusDAOImpl.class
 ie/sesh/Controllers/Comments/CommentsController.class
+ie/sesh/Utils/AuthUtils.class
 ie/sesh/Controllers/StatusController.class
 ie/sesh/Models/impl/AuthDAOImpl.class
 ie/sesh/Models/AuthDAO.class
+ie/sesh/Models/Token.class
 ie/sesh/Models/Comments/Comment.class
 ie/sesh/Models/StatusDAO.class
 ie/sesh/Utils/StatusUtils.class

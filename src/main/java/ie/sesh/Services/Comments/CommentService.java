@@ -5,10 +5,9 @@ import com.google.gson.GsonBuilder;
 import ie.sesh.Models.Comments.Comment;
 import ie.sesh.Models.Comments.CommentDAO;
 
-import ie.sesh.Models.Status;
+import ie.sesh.Models.Token;
 import ie.sesh.Services.AuthenticationService;
 import ie.sesh.Services.SecurityConfigService;
-import ie.sesh.Utils.CommonUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +33,7 @@ public class CommentService {
     return commentDAO.getComment(id);
   }
 
-  public ResponseEntity getAllStatusComments(int id, String token) {
+  public ResponseEntity getAllStatusComments(int id, Token token) {
     List<Comment> commentFeed;
     try {
       if (!authenticationService.checkUserToken(token)) {
@@ -76,7 +75,7 @@ public class CommentService {
     return new ResponseEntity<>("Failed to update Comment", HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  public ResponseEntity createComment(Comment comment, String token) {
+  public ResponseEntity createComment(Comment comment, Token token) {
     try {
       if (!authenticationService.checkUserToken(token)) {
         log.info("User Token is not valid");

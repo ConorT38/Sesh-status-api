@@ -8,7 +8,7 @@ public class SQLConstants {
       "UPDATE status SET user_id=?,message=?,location=?,likes=?,uploaded=?,going=?,maybe=?,not_going=? WHERE id=?";
   public static final String GET_STATUS_BY_ID = "SELECT * FROM status WHERE id = ?";
   public static final String GET_STATUS_BY_USERNAME =
-      "SELECT * FROM status INNER JOIN users ON users.id=status.user_id WHERE users.username = ?";
+      "SELECT * ,status.id as status_id, users.username,users.profile_pic, users.first_name, users.last_name FROM status INNER JOIN users ON users.id=status.user_id WHERE users.username = ?";
   public static final String DELETE_STATUS =
       "DELETE s "
           + "FROM status s "
@@ -34,15 +34,7 @@ public class SQLConstants {
   public static final String CHECK_LIKED_COMMENT =
       "SELECT EXISTS(SELECT 1 FROM comments_likes where user_id =? and comment_id = ?);";
 
-  public static final String GET_LIVE_FEED =
-      "SELECT status.*,users.username,users.profile_pic, users.first_name, users.last_name FROM status "
-          + "LEFT JOIN user_relationship "
-          + "ON status.user_id=user_relationship.friend_id "
-          + "INNER JOIN users "
-          + "ON users.id=status.user_id "
-          + "WHERE user_relationship.user_id=? AND user_relationship.type='friend' OR status.user_id=? "
-          + "ORDER BY uploaded DESC "
-          + "LIMIT 20";
+  public static final String GET_LIVE_FEED = "CALL get_live_feed(?,?)";
 
   public static final String GET_LIVE_FEED_OLDER =
       "SELECT status.*,users.username,users.profile_pic, users.first_name, users.last_name FROM status "
@@ -55,14 +47,6 @@ public class SQLConstants {
           + "AND id < ?"
           + "ORDER BY uploaded DESC "
           + "LIMIT 20";
-
-  public static final String GET_USER_POSTS =
-      "SELECT status.*,users.username,users.profile_pic,users.first_name, users.last_name "
-          + "FROM status  "
-          + "INNER JOIN users "
-          + "ON users.id=status.user_id "
-          + "WHERE users.id=? "
-          + "ORDER BY uploaded DESC";
 
   public static final String CHECK_USER_TOKEN =
       "SELECT 1 FROM user_logged_in WHERE token=? AND user_id=?";

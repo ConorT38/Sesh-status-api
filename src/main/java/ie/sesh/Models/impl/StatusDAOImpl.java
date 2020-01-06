@@ -32,11 +32,11 @@ public class StatusDAOImpl implements StatusDAO {
         jdbcTemplate.queryForObject(GET_STATUS_BY_ID, new Object[] {id}, new StatusMapper());
   }
 
-  public List<Status> getLiveFeed(int id) {
+  public List<Status> getLiveFeed(int id, String token) {
     log.info("Getting statuses by id " + id);
     List<Status> statuses = new ArrayList<Status>();
     List<Map<String, Object>> statusList =
-        jdbcTemplate.queryForList(GET_LIVE_FEED, new Object[] {id, id});
+        jdbcTemplate.queryForList(GET_LIVE_FEED, new Object[] {id, token});
 
     for (Map status : statusList) {
       Status s = new Status();
@@ -46,7 +46,6 @@ public class StatusDAOImpl implements StatusDAO {
       s.setLast_name((String) status.get("last_name"));
       s.setUsername((String) status.get("username"));
       s.setMessage((String) status.get("message"));
-      s.setMessage((String) status.get("message"));
       s.setLocation((int) status.get("location"));
       s.setLikes((int) status.get("likes"));
       s.setLiked(
@@ -61,32 +60,7 @@ public class StatusDAOImpl implements StatusDAO {
     return statuses;
   }
 
-  public List<Status> getAllUserStatus(int id) {
-    log.info("Getting statuses by id " + id);
-    List<Status> statuses = new ArrayList<Status>();
-    List<Map<String, Object>> statusList =
-        jdbcTemplate.queryForList(GET_USER_POSTS, new Object[] {id});
-
-    for (Map status : statusList) {
-      Status s = new Status();
-      s.setId(toIntExact((Long) (status.get("id"))));
-      s.setUser_id(toIntExact((Long) (status.get("user_id"))));
-      s.setMessage((String) status.get("message"));
-      s.setLocation((int) status.get("location"));
-      s.setLikes((int) status.get("likes"));
-      s.setLiked(
-          checkLikedStatus(
-              ((Long) (status.get("user_id"))).intValue(), ((Long) (status.get("id"))).intValue()));
-      s.setDate((Timestamp) status.get("uploaded"));
-      s.setGoing((String) status.get("going"));
-      s.setMaybe((String) status.get("maybe"));
-      s.setNot_going((String) status.get("not_going"));
-      statuses.add(s);
-    }
-    return statuses;
-  }
-
-  public List<Status> getAllUserProfileStatus(String username) {
+  public List<Status> getProfileLiveFeed(String username) {
     log.info("Getting statuses by username " + username);
     List<Status> statuses = new ArrayList<Status>();
     List<Map<String, Object>> statusList =
@@ -94,8 +68,11 @@ public class StatusDAOImpl implements StatusDAO {
 
     for (Map status : statusList) {
       Status s = new Status();
-      s.setId(toIntExact((Long) (status.get("id"))));
-      s.setUser_id(toIntExact((Long) (status.get("user_id"))));
+      s.setId(toIntExact((Long) (status.get("status_id"))));
+      s.setUser_id(toIntExact((Long) (status.get("id"))));
+      s.setFirst_name((String) status.get("first_name"));
+      s.setLast_name((String) status.get("last_name"));
+      s.setUsername((String) status.get("username"));
       s.setMessage((String) status.get("message"));
       s.setLocation((int) status.get("location"));
       s.setLikes((int) status.get("likes"));

@@ -1,7 +1,9 @@
 package ie.sesh.Controllers;
 
 import ie.sesh.Models.Status;
+import ie.sesh.Models.Token;
 import ie.sesh.Services.StatusService;
+import ie.sesh.Utils.AuthUtils;
 import ie.sesh.Utils.CommonUtils;
 import ie.sesh.Utils.StatusUtils;
 
@@ -39,28 +41,18 @@ public class StatusController {
   public ResponseEntity<List<Status>> getLiveFeed(
       @PathVariable(name = "user_id") int id, @RequestHeader HttpHeaders headers) {
     log.info("Get all live feed for user " + id);
-    String user_token = headers.getFirst("Authorization");
-    return statusService.getLiveFeed(id, user_token);
+    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
+    return statusService.getLiveFeed(id, token);
   }
 
   @CrossOrigin(origins = "*")
-  @GetMapping("/user/status/{user_id}")
+  @GetMapping("/profile/live/feed/{username}")
   @ResponseBody
-  public ResponseEntity<List<Status>> getAllUserStatus(
-      @PathVariable(name = "user_id") int id, @RequestHeader HttpHeaders headers) {
-    log.info("Get all statuses from user " + id);
-    String user_token = headers.getFirst("Authorization");
-    return new ResponseEntity<>(statusService.getAllUserStatus(id), HttpStatus.OK);
-  }
-
-  @CrossOrigin(origins = "*")
-  @GetMapping("/user/status/@{username}")
-  @ResponseBody
-  public ResponseEntity<List<Status>> getAllUserProfileStatus(
-      @PathVariable("username") String username, @RequestHeader HttpHeaders headers) {
-    log.info("Get all statuses from user " + username);
-    String user_token = headers.getFirst("Authorization");
-    return new ResponseEntity<>(statusService.getAllUserProfileStatus(username), HttpStatus.OK);
+  public ResponseEntity<List<Status>> getProfileLiveFeed(
+      @PathVariable(name = "username") String username, @RequestHeader HttpHeaders headers) {
+    log.info("Get all live feed for user " + username);
+    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
+    return statusService.getProfileLiveFeed(username, token);
   }
 
   @CrossOrigin(origins = "*")
@@ -78,8 +70,8 @@ public class StatusController {
   public ResponseEntity createStatus(
       @RequestBody String status_data, @RequestHeader HttpHeaders headers) {
     Status status = statusUtils.buildStatus(status_data);
-    String user_token = headers.getFirst("Authorization");
-    return statusService.createStatus(status, user_token);
+    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
+    return statusService.createStatus(status, token);
   }
 
   @CrossOrigin(origins = "*")
@@ -87,9 +79,9 @@ public class StatusController {
   @ResponseBody
   public ResponseEntity deleteStatus(
       @PathVariable(name = "id") int id, @RequestHeader HttpHeaders headers) {
-    String user_token = headers.getFirst("Authorization");
-    log.debug("User Token: " + user_token);
-    return statusService.deleteStatus(id, user_token);
+    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
+    log.debug("User Token: " + token.getUserToken());
+    return statusService.deleteStatus(id, token);
   }
 
   @CrossOrigin(origins = "*")
@@ -121,8 +113,8 @@ public class StatusController {
       @RequestBody String status_data,
       @RequestHeader HttpHeaders headers,
       @PathVariable(name = "status_id") int status_id) {
-    String user_token = headers.getFirst("Authorization");
-    return statusService.likeStatus(status_id, user_token);
+    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
+    return statusService.likeStatus(status_id, token);
   }
 
   @CrossOrigin(origins = "*")
@@ -132,7 +124,7 @@ public class StatusController {
       @RequestBody String status_data,
       @RequestHeader HttpHeaders headers,
       @PathVariable(name = "status_id") int status_id) {
-    String user_token = headers.getFirst("Authorization");
-    return statusService.unlikeStatus(status_id, user_token);
+    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
+    return statusService.unlikeStatus(status_id, token);
   }
 }

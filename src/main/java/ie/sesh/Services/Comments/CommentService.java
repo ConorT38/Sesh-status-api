@@ -35,14 +35,9 @@ public class CommentService {
   }
 
   public ResponseEntity getAllStatusComments(int id, String token) {
-
     List<Comment> commentFeed;
-    String[] auth_arr = CommonUtils.splitAuthTokenValues(token);
-    int user_id = Integer.parseInt(auth_arr[0]);
-    String user_token = auth_arr[1];
-
     try {
-      if (!authenticationService.checkUserToken(user_token, user_id)) {
+      if (!authenticationService.checkUserToken(token)) {
         log.info("User Token is not valid");
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
             .headers(securityConfigService.getHttpHeaders())
@@ -82,12 +77,8 @@ public class CommentService {
   }
 
   public ResponseEntity createComment(Comment comment, String token) {
-    String[] auth_arr = CommonUtils.splitAuthTokenValues(token);
-    int user_id = Integer.parseInt(auth_arr[0]);
-    String user_token = auth_arr[1];
-
     try {
-      if (!authenticationService.checkUserToken(user_token, user_id)) {
+      if (!authenticationService.checkUserToken(token)) {
         log.info("User Token is not valid");
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
             .headers(securityConfigService.getHttpHeaders())

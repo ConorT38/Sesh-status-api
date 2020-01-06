@@ -32,12 +32,9 @@ public class StatusService {
 
   public ResponseEntity getLiveFeed(int id, String token) {
     List<Status> liveFeed;
-    String[] auth_arr = CommonUtils.splitAuthTokenValues(token);
-    int user_id = Integer.parseInt(auth_arr[0]);
-    String user_token = auth_arr[1];
 
     try {
-      if (!authenticationService.checkUserToken(user_token, user_id)) {
+      if (!authenticationService.checkUserToken(token)) {
         log.info("User Token is not valid");
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
             .headers(securityConfigService.getHttpHeaders())
@@ -87,19 +84,9 @@ public class StatusService {
 
   public ResponseEntity createStatus(Status status, String token) {
     HttpHeaders headers = securityConfigService.getHttpHeaders();
-    String[] auth_arr = CommonUtils.splitAuthTokenValues(token);
 
-    if (auth_arr == null || auth_arr.length < 1) {
-      log.error("User Token is not valid");
-      return ResponseEntity.status(HttpStatus.FORBIDDEN)
-          .headers(headers)
-          .body("User Token is not valid");
-    }
-
-    int user_id = Integer.parseInt(auth_arr[0]);
-    String user_token = auth_arr[1];
     try {
-      if (!authenticationService.checkUserToken(user_token, user_id)) {
+      if (!authenticationService.checkUserToken(token)) {
         log.info("User Token is not valid");
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
             .headers(headers)
@@ -127,7 +114,7 @@ public class StatusService {
     String user_token = auth_arr[1];
 
     try {
-      if (!authenticationService.checkUserToken(user_token, user_id)) {
+      if (!authenticationService.checkUserToken(token)) {
         log.info("User Token is not valid");
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
             .headers(securityConfigService.getHttpHeaders())
@@ -156,11 +143,65 @@ public class StatusService {
     return statusDAO.checkLikedStatus(id, status_id);
   }
 
-  public void likeStatus(int id, int status_id) {
-    statusDAO.likeStatus(id, status_id);
+  public ResponseEntity likeStatus(int status_id, String token) {
+    String[] auth_arr = CommonUtils.splitAuthTokenValues(token);
+    int user_id = Integer.parseInt(auth_arr[0]);
+    String user_token = auth_arr[1];
+
+    try {
+      if (!authenticationService.checkUserToken(token)) {
+        log.info("User Token is not valid");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .headers(securityConfigService.getHttpHeaders())
+            .body("User Token is not valid");
+      }
+      if (statusDAO.likeStatus(user_id, status_id, user_token)) {
+        log.info("Status Liked with id: " + status_id + " by User: " + user_id);
+        return ResponseEntity.ok()
+            .headers(securityConfigService.getHttpHeaders())
+            .body("Status Liked");
+      }
+      log.info("User not allowed to like status");
+      return ResponseEntity.status(HttpStatus.FORBIDDEN)
+          .headers(securityConfigService.getHttpHeaders())
+          .body("Like denied");
+    } catch (Exception e) {
+      log.error(e.getMessage());
+    }
+    log.debug("Could not Like Status: " + status_id);
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .headers(securityConfigService.getHttpHeaders())
+        .body("Failed to Like Status");
   }
 
-  public void unlikeStatus(int id, int status_id) {
-    statusDAO.unlikeStatus(id, status_id);
+  public ResponseEntity unlikeStatus(int status_id, String token) {
+    String[] auth_arr = CommonUtils.splitAuthTokenValues(token);
+    int user_id = Integer.parseInt(auth_arr[0]);
+    String user_token = auth_arr[1];
+
+    try {
+      if (!authenticationService.checkUserToken(token)) {
+        log.info("User Token is not valid");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .headers(securityConfigService.getHttpHeaders())
+            .body("User Token is not valid");
+      }
+      if (statusDAO.unlikeStatus(user_id, status_id, user_token)) {
+        log.info("Status Unliked with id: " + status_id + " by User: " + user_id);
+        return ResponseEntity.ok()
+            .headers(securityConfigService.getHttpHeaders())
+            .body("Status Liked");
+      }
+      log.info("User not allowed to Unliked status");
+      return ResponseEntity.status(HttpStatus.FORBIDDEN)
+          .headers(securityConfigService.getHttpHeaders())
+          .body("Like denied");
+    } catch (Exception e) {
+      log.error(e.getMessage());
+    }
+    log.debug("Could not Unliked Status: " + status_id);
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .headers(securityConfigService.getHttpHeaders())
+        .body("Failed to Unliked Status");
   }
 }

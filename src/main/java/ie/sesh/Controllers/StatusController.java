@@ -115,44 +115,24 @@ public class StatusController {
   }
 
   @CrossOrigin(origins = "*")
-  @PostMapping("/like/status")
+  @PostMapping("/like/status/{status_id}")
   @ResponseBody
   public ResponseEntity likeStatus(
-      @RequestBody String status_data, @RequestHeader HttpHeaders headers) {
+      @RequestBody String status_data,
+      @RequestHeader HttpHeaders headers,
+      @PathVariable(name = "status_id") int status_id) {
     String user_token = headers.getFirst("Authorization");
-    int id = CommonUtils.parseIntFromJSON(status_data, "id");
-    int status_id = CommonUtils.parseIntFromJSON(status_data, "status_id");
-
-    try {
-      statusService.likeStatus(id, status_id);
-      log.info("Liked status " + status_id);
-
-      return new ResponseEntity<>(true, HttpStatus.OK);
-    } catch (Exception e) {
-      log.error(e.getMessage());
-      return new ResponseEntity<>(
-          "Failed to like status " + status_id, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    return statusService.likeStatus(status_id, user_token);
   }
 
   @CrossOrigin(origins = "*")
-  @PostMapping("/unlike/status")
+  @PostMapping("/unlike/status/{status_id}")
   @ResponseBody
   public ResponseEntity unlikeStatus(
-      @RequestBody String status_data, @RequestHeader HttpHeaders headers) {
+      @RequestBody String status_data,
+      @RequestHeader HttpHeaders headers,
+      @PathVariable(name = "status_id") int status_id) {
     String user_token = headers.getFirst("Authorization");
-    int id = CommonUtils.parseIntFromJSON(status_data, "id");
-    int status_id = CommonUtils.parseIntFromJSON(status_data, "status_id");
-
-    try {
-      statusService.unlikeStatus(id, status_id);
-      log.info("Unliked status " + status_id);
-
-      return new ResponseEntity<>(true, HttpStatus.OK);
-    } catch (Exception e) {
-      log.error(e.getMessage());
-      return new ResponseEntity<>(
-          "Failed to unlike status " + status_id, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    return statusService.unlikeStatus(status_id, user_token);
   }
 }

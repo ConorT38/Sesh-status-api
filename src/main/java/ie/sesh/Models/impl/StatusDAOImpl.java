@@ -194,49 +194,39 @@ public class StatusDAOImpl implements StatusDAO {
     return false;
   }
 
-  public void likeStatus(int id, int status_id) {
-    log.info("User: " + id + " likes status: " + status_id);
+  public boolean likeStatus(int user_id, int status_id, String token) {
+    log.info("User: " + user_id + " likes status: " + status_id + " using token: " + token);
     KeyHolder holder = new GeneratedKeyHolder();
-    jdbcTemplate.update(
-        connection -> {
-          PreparedStatement ps =
-              connection.prepareStatement(LIKE_STATUS, Statement.RETURN_GENERATED_KEYS);
-          ps.setInt(1, id);
-          ps.setInt(2, status_id);
-          return ps;
-        },
-        holder);
+    int check =
+        jdbcTemplate.update(
+            connection -> {
+              PreparedStatement ps =
+                  connection.prepareStatement(LIKE_STATUS, Statement.RETURN_GENERATED_KEYS);
+              ps.setInt(1, user_id);
+              ps.setInt(2, status_id);
+              ps.setString(3, token);
+              return ps;
+            },
+            holder);
 
-    jdbcTemplate.update(
-        connection -> {
-          PreparedStatement ps =
-              connection.prepareStatement(LIKE_STATUS_INCREMENT, Statement.RETURN_GENERATED_KEYS);
-          ps.setInt(1, status_id);
-          return ps;
-        },
-        holder);
+    return check > 0;
   }
 
-  public void unlikeStatus(int id, int status_id) {
+  public boolean unlikeStatus(int user_id, int status_id, String token) {
     KeyHolder holder = new GeneratedKeyHolder();
-    jdbcTemplate.update(
-        connection -> {
-          PreparedStatement ps =
-              connection.prepareStatement(UNLIKE_STATUS, Statement.RETURN_GENERATED_KEYS);
-          ps.setInt(1, id);
-          ps.setInt(2, status_id);
-          return ps;
-        },
-        holder);
+    int check =
+        jdbcTemplate.update(
+            connection -> {
+              PreparedStatement ps =
+                  connection.prepareStatement(UNLIKE_STATUS, Statement.RETURN_GENERATED_KEYS);
+              ps.setInt(1, user_id);
+              ps.setInt(2, status_id);
+              ps.setString(3, token);
+              return ps;
+            },
+            holder);
 
-    jdbcTemplate.update(
-        connection -> {
-          PreparedStatement ps =
-              connection.prepareStatement(UNLIKE_STATUS_DECREMENT, Statement.RETURN_GENERATED_KEYS);
-          ps.setInt(1, status_id);
-          return ps;
-        },
-        holder);
+    return check > 0;
   }
 }
 

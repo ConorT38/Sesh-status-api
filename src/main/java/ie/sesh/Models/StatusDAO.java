@@ -20,7 +20,7 @@ public interface StatusDAO {
 
   boolean checkLikedStatus(int id, int status_id);
 
-  void likeStatus(int id, int status_id);
+  boolean likeStatus(int id, int status_id, String token);
 
-  void unlikeStatus(int id, int status_id);
+  boolean unlikeStatus(int id, int status_id, String token);
 }

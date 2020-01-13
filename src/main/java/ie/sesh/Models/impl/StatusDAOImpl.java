@@ -45,6 +45,7 @@ public class StatusDAOImpl implements StatusDAO {
       s.setFirst_name((String) status.get("first_name"));
       s.setLast_name((String) status.get("last_name"));
       s.setUsername((String) status.get("username"));
+      s.setProfile_pic((String) status.get("profile_pic"));
       s.setMessage((String) status.get("message"));
       s.setLocation((int) status.get("location"));
       s.setLikes((int) status.get("likes"));

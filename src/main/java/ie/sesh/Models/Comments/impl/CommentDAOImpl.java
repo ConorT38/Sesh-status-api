@@ -1,9 +1,7 @@
 package ie.sesh.Models.Comments.impl;
 
 import ie.sesh.Models.Comments.Comment;
-
 import ie.sesh.Models.Comments.CommentDAO;
-import ie.sesh.Models.Status;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -49,6 +47,7 @@ public class CommentDAOImpl implements CommentDAO {
       c.setMessage((String) comment.get("message"));
       c.setLikes((int) comment.get("likes"));
       c.setDate((Timestamp) comment.get("uploaded"));
+      c.setProfilePic((String) comment.get("profile_pic"));
       comments.add(c);
     }
     return comments;

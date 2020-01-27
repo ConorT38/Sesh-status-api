@@ -53,9 +53,6 @@ public class StatusDAOImpl implements StatusDAO {
           checkLikedStatus(
               ((Long) (status.get("user_id"))).intValue(), ((Long) (status.get("id"))).intValue()));
       s.setDate((Timestamp) status.get("uploaded"));
-      s.setGoing((String) status.get("going"));
-      s.setMaybe((String) status.get("maybe"));
-      s.setNot_going((String) status.get("not_going"));
       statuses.add(s);
     }
     return statuses;
@@ -74,16 +71,15 @@ public class StatusDAOImpl implements StatusDAO {
       s.setFirst_name((String) status.get("first_name"));
       s.setLast_name((String) status.get("last_name"));
       s.setUsername((String) status.get("username"));
+      s.setProfile_pic((String) status.get("profile_pic"));
       s.setMessage((String) status.get("message"));
       s.setLocation((int) status.get("location"));
       s.setLikes((int) status.get("likes"));
+      s.setNumComments((int) status.get("comments"));
       s.setLiked(
           checkLikedStatus(
               ((Long) (status.get("user_id"))).intValue(), ((Long) (status.get("id"))).intValue()));
       s.setDate((Timestamp) status.get("uploaded"));
-      s.setGoing((String) status.get("going"));
-      s.setMaybe((String) status.get("maybe"));
-      s.setNot_going((String) status.get("not_going"));
       statuses.add(s);
     }
     return statuses;
@@ -93,23 +89,21 @@ public class StatusDAOImpl implements StatusDAO {
     log.info("Updating status");
     KeyHolder holder = new GeneratedKeyHolder();
     try {
-      jdbcTemplate.update(
-          connection -> {
-            PreparedStatement ps =
-                connection.prepareStatement(UPDATE_STATUS, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, status.getUser_id());
-            ps.setString(2, status.getMessage());
-            ps.setInt(3, status.getLocation());
-            ps.setInt(4, status.getLikes());
-            ps.setTimestamp(5, status.getDate());
-            ps.setString(6, status.getGoing());
-            ps.setString(7, status.getMaybe());
-            ps.setString(8, status.getNot_going());
-            ps.setInt(9, status.getId());
-            return ps;
-          },
-          holder);
-      return true;
+      int updated =
+          jdbcTemplate.update(
+              connection -> {
+                PreparedStatement ps =
+                    connection.prepareStatement(UPDATE_STATUS, Statement.RETURN_GENERATED_KEYS);
+                ps.setInt(1, status.getUser_id());
+                ps.setString(2, status.getMessage());
+                ps.setInt(3, status.getLocation());
+                ps.setInt(4, status.getLikes());
+                ps.setTimestamp(5, status.getDate());
+                ps.setInt(6, status.getId());
+                return ps;
+              },
+              holder);
+      return updated > 0;
     } catch (Exception e) {
       log.error(e.getMessage());
     }
@@ -218,9 +212,7 @@ class StatusMapper implements RowMapper {
     status.setLocation(rs.getInt("location"));
     status.setLikes(rs.getInt("likes"));
     status.setDate(rs.getTimestamp("uploaded"));
-    status.setGoing(rs.getString("going"));
-    status.setMaybe(rs.getString("maybe"));
-    status.setNot_going(rs.getString("not_going"));
+
     return status;
   }
 }

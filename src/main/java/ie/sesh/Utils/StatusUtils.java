@@ -16,12 +16,4 @@ public class StatusUtils {
 
     return new Status(user_id, message, location, date);
   }
-
-  public String getUserToken(String data) {
-    return CommonUtils.parseStringFromJSON(data, "user_token");
-  }
-
-  public int getUserId(String data) {
-    return CommonUtils.parseIntFromJSON(data, "user_id");
-  }
 }

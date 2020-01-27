@@ -15,13 +15,9 @@ public class Status {
   private int location;
   private int likes;
   private boolean liked;
+  private int numComments;
 
   private Timestamp date;
-
-  // uses User ID
-  private String going;
-  private String maybe;
-  private String not_going;
 
   public Status() {}
 
@@ -36,9 +32,7 @@ public class Status {
       int likes,
       boolean liked,
       Timestamp date,
-      String going,
-      String maybe,
-      String not_going) {
+      int numComments) {
     this.id = id;
     this.user_id = user_id;
     this.username = username;
@@ -49,9 +43,7 @@ public class Status {
     this.likes = likes;
     this.liked = liked;
     this.date = date;
-    this.going = going;
-    this.maybe = maybe;
-    this.not_going = not_going;
+    this.numComments = numComments;
   }
 
   public Status(int user_id, String message, int location, Timestamp date) {
@@ -141,35 +133,19 @@ public class Status {
     this.date = date;
   }
 
-  public String getGoing() {
-    return going;
-  }
-
-  public void setGoing(String going) {
-    this.going = going;
-  }
-
-  public String getMaybe() {
-    return maybe;
-  }
-
-  public void setMaybe(String maybe) {
-    this.maybe = maybe;
-  }
-
-  public String getNot_going() {
-    return not_going;
-  }
-
-  public void setNot_going(String not_going) {
-    this.not_going = not_going;
-  }
-
   public String getProfile_pic() {
     return profile_pic;
   }
 
   public void setProfile_pic(String profile_pic) {
     this.profile_pic = profile_pic;
+  }
+
+  public int getNumComments() {
+    return numComments;
+  }
+
+  public void setNumComments(int numComments) {
+    this.numComments = numComments;
   }
 }

@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import ie.sesh.Models.Status;
 import ie.sesh.Models.StatusDAO;
 import ie.sesh.Models.Token;
-import ie.sesh.Utils.CommonUtils;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

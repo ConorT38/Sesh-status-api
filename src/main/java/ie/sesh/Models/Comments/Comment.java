@@ -13,8 +13,17 @@ public class Comment {
   private String name;
   private int likes;
   private Timestamp date;
+  private String profilePic;
 
   public Comment() {}
+
+  public Comment(int status_id, int user_id, String message, Timestamp date, String profilePic) {
+    this.status_id = status_id;
+    this.user_id = user_id;
+    this.message = message;
+    this.date = date;
+    this.profilePic = profilePic;
+  }
 
   public Comment(int status_id, int user_id, String message, Timestamp date) {
     this.status_id = status_id;
@@ -104,5 +113,13 @@ public class Comment {
 
   public void setDate(Timestamp date) {
     this.date = date;
+  }
+
+  public String getProfilePic() {
+    return profilePic;
+  }
+
+  public void setProfilePic(String profilePic) {
+    this.profilePic = profilePic;
   }
 }

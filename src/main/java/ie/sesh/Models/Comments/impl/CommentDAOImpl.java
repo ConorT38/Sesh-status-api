@@ -2,6 +2,7 @@ package ie.sesh.Models.Comments.impl;
 
 import ie.sesh.Models.Comments.Comment;
 import ie.sesh.Models.Comments.CommentDAO;
+import ie.sesh.Models.Token;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -75,21 +76,25 @@ public class CommentDAOImpl implements CommentDAO {
     return false;
   }
 
-  public boolean createComment(Comment comment) {
-    log.info("Inserting comment into status: " + comment.getStatus_id());
+  public boolean createComment(Comment comment, Token token) {
+    log.info(
+        "User: " + token.getUserId() + " inserting comment into status: " + comment.getStatus_id());
     KeyHolder holder = new GeneratedKeyHolder();
     try {
-      jdbcTemplate.update(
-          connection -> {
-            PreparedStatement ps =
-                connection.prepareStatement(INSERT_STATUS_COMMENT, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, comment.getUser_id());
-            ps.setInt(2, comment.getStatus_id());
-            ps.setString(3, comment.getMessage());
-            return ps;
-          },
-          holder);
-      return true;
+      int check =
+          jdbcTemplate.update(
+              connection -> {
+                PreparedStatement ps =
+                    connection.prepareStatement(
+                        INSERT_STATUS_COMMENT, Statement.RETURN_GENERATED_KEYS);
+                ps.setInt(1, comment.getUser_id());
+                ps.setInt(2, comment.getStatus_id());
+                ps.setString(3, comment.getMessage());
+                ps.setString(4, token.getUserToken());
+                return ps;
+              },
+              holder);
+      return check > 0;
     } catch (Exception e) {
       log.error(e.getMessage());
     }

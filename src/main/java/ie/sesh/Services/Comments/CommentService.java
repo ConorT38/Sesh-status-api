@@ -83,7 +83,7 @@ public class CommentService {
             .headers(securityConfigService.getHttpHeaders())
             .body("User Token is not valid");
       }
-      if (!commentDAO.createComment(comment)) {
+      if (!commentDAO.createComment(comment, token)) {
         return new ResponseEntity<>("Failed to create Comment", HttpStatus.INTERNAL_SERVER_ERROR);
       }
       return new ResponseEntity<>("Comment created", HttpStatus.OK);

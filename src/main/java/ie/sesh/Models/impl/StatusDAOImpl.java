@@ -3,6 +3,7 @@ package ie.sesh.Models.impl;
 import ie.sesh.Models.Status;
 import ie.sesh.Models.StatusDAO;
 
+import ie.sesh.Models.Token;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -53,6 +54,8 @@ public class StatusDAOImpl implements StatusDAO {
           checkLikedStatus(
               ((Long) (status.get("user_id"))).intValue(), ((Long) (status.get("id"))).intValue()));
       s.setDate((Timestamp) status.get("uploaded"));
+      s.setHasImage((int) status.get("has_image") > 0);
+      s.setImageLocation((String) status.get("media"));
       statuses.add(s);
     }
     return statuses;
@@ -110,7 +113,7 @@ public class StatusDAOImpl implements StatusDAO {
     return false;
   }
 
-  public boolean createStatus(Status status) {
+  public boolean createStatus(Status status, Token token) {
     log.info("Inserting status");
     KeyHolder holder = new GeneratedKeyHolder();
     try {
@@ -118,10 +121,12 @@ public class StatusDAOImpl implements StatusDAO {
           connection -> {
             PreparedStatement ps =
                 connection.prepareStatement(INSERT_STATUS, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, status.getUser_id());
+            ps.setInt(1, token.getUserId());
             ps.setString(2, status.getMessage());
             ps.setInt(3, status.getLocation());
             ps.setTimestamp(4, status.getDate());
+            ps.setInt(5, status.isHasImage() ? 1 : 0);
+            ps.setString(6, status.getImageLocation());
             return ps;
           },
           holder);

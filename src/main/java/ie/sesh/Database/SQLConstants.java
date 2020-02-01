@@ -3,7 +3,7 @@ package ie.sesh.Database;
 public class SQLConstants {
 
   public static final String INSERT_STATUS =
-      "INSERT INTO status(user_id,message,location,uploaded) values(?,?,?,?)";
+      "INSERT INTO status(user_id,message,location,uploaded, has_image, media) values(?,?,?,?,?,?)";
   public static final String UPDATE_STATUS =
       "UPDATE status SET user_id=?,message=?,location=?,likes=?,uploaded=? WHERE id=?";
   public static final String GET_STATUS_BY_ID = "SELECT * FROM status WHERE id = ?";
@@ -23,8 +23,7 @@ public class SQLConstants {
   public static final String LIKE_STATUS = "CALL like_status(?,?,?);";
   public static final String UNLIKE_STATUS = "CALL unlike_status(?,?,?);";
 
-  public static final String INSERT_STATUS_COMMENT =
-      "INSERT INTO comments (user_id, status_id, message, uploaded) VALUES(?,?,?, NOW());";
+  public static final String INSERT_STATUS_COMMENT = "CALL create_comment(?,?,?,?)";
   public static final String UPDATE_STATUS_COMMENT =
       "UPDATE comments SET status_id,user_id=?,message=?,likes=? WHERE id=?";
   public static final String GET_STATUS_COMMENT_BY_ID = "SELECT * FROM comments WHERE id = ?";

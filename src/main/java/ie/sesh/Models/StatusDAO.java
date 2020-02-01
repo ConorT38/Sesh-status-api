@@ -10,7 +10,7 @@ public interface StatusDAO {
 
   List<Status> getProfileLiveFeed(String username);
 
-  boolean createStatus(Status status);
+  boolean createStatus(Status status, Token token);
 
   boolean updateStatus(Status status);
 

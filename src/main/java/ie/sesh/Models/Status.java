@@ -16,6 +16,8 @@ public class Status {
   private int likes;
   private boolean liked;
   private int numComments;
+  private boolean hasImage;
+  private String imageLocation;
 
   private Timestamp date;
 
@@ -46,11 +48,13 @@ public class Status {
     this.numComments = numComments;
   }
 
-  public Status(int user_id, String message, int location, Timestamp date) {
-    this.user_id = user_id;
+  public Status(
+      String message, int location, Timestamp date, boolean hasImage, String imageLocation) {
     this.message = message;
     this.location = location;
     this.date = date;
+    this.hasImage = hasImage;
+    this.imageLocation = imageLocation;
   }
 
   public int getId() {
@@ -147,5 +151,21 @@ public class Status {
 
   public void setNumComments(int numComments) {
     this.numComments = numComments;
+  }
+
+  public boolean isHasImage() {
+    return hasImage;
+  }
+
+  public void setHasImage(boolean hasImage) {
+    this.hasImage = hasImage;
+  }
+
+  public String getImageLocation() {
+    return imageLocation;
+  }
+
+  public void setImageLocation(String imageLocation) {
+    this.imageLocation = imageLocation;
   }
 }

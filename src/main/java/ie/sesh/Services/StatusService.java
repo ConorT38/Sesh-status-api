@@ -113,7 +113,7 @@ public class StatusService {
             .body("User Token is not valid");
       }
 
-      if (statusDAO.createStatus(status)) {
+      if (statusDAO.createStatus(status, token)) {
         log.info("Created Status");
         return ResponseEntity.ok().headers(headers).body("Status Created");
       }

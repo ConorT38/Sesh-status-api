@@ -33,11 +33,12 @@ public class StatusDAOImpl implements StatusDAO {
         jdbcTemplate.queryForObject(GET_STATUS_BY_ID, new Object[] {id}, new StatusMapper());
   }
 
-  public List<Status> getLiveFeed(int id, String token) {
-    log.info("Getting statuses by id " + id);
+  public List<Status> getLiveFeed(Token token) {
+    log.info("Getting statuses by id " + token.getUserId());
     List<Status> statuses = new ArrayList<Status>();
     List<Map<String, Object>> statusList =
-        jdbcTemplate.queryForList(GET_LIVE_FEED, new Object[] {id, token});
+        jdbcTemplate.queryForList(
+            GET_LIVE_FEED, new Object[] {token.getUserId(), token.getUserToken()});
 
     for (Map status : statusList) {
       Status s = new Status();
@@ -61,14 +62,21 @@ public class StatusDAOImpl implements StatusDAO {
     return statuses;
   }
 
-  public List<Status> getProfileLiveFeed(String username) {
-    log.info("Getting statuses by username " + username);
+  public List<Status> getProfileLiveFeed(String username, Token token) {
+    log.info(
+        "Getting statuses by username "
+            + username
+            + ", user id: "
+            + token.getUserId()
+            + " and token: "
+            + token.getUserToken());
     List<Status> statuses = new ArrayList<Status>();
     List<Map<String, Object>> statusList =
         jdbcTemplate.queryForList(GET_STATUS_BY_USERNAME, new Object[] {username});
 
     for (Map status : statusList) {
       Status s = new Status();
+
       s.setId(toIntExact((Long) (status.get("status_id"))));
       s.setUser_id(toIntExact((Long) (status.get("id"))));
       s.setFirst_name((String) status.get("first_name"));
@@ -83,6 +91,9 @@ public class StatusDAOImpl implements StatusDAO {
           checkLikedStatus(
               ((Long) (status.get("user_id"))).intValue(), ((Long) (status.get("id"))).intValue()));
       s.setDate((Timestamp) status.get("uploaded"));
+      s.setHasImage((int) status.get("has_image") > 0);
+      s.setImageLocation((String) status.get("media"));
+
       statuses.add(s);
     }
     return statuses;
@@ -117,20 +128,21 @@ public class StatusDAOImpl implements StatusDAO {
     log.info("Inserting status");
     KeyHolder holder = new GeneratedKeyHolder();
     try {
-      jdbcTemplate.update(
-          connection -> {
-            PreparedStatement ps =
-                connection.prepareStatement(INSERT_STATUS, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, token.getUserId());
-            ps.setString(2, status.getMessage());
-            ps.setInt(3, status.getLocation());
-            ps.setTimestamp(4, status.getDate());
-            ps.setInt(5, status.isHasImage() ? 1 : 0);
-            ps.setString(6, status.getImageLocation());
-            return ps;
-          },
-          holder);
-      return true;
+      int check =
+          jdbcTemplate.update(
+              connection -> {
+                PreparedStatement ps =
+                    connection.prepareStatement(INSERT_STATUS, Statement.RETURN_GENERATED_KEYS);
+                ps.setInt(1, token.getUserId());
+                ps.setString(2, status.getMessage());
+                ps.setInt(3, status.getLocation());
+                ps.setTimestamp(4, status.getDate());
+                ps.setInt(5, status.isHasImage() ? 1 : 0);
+                ps.setString(6, status.getImageLocation());
+                return ps;
+              },
+              holder);
+      return check > 0;
     } catch (DataAccessException e) {
       log.error(e.getMessage());
       return false;

@@ -40,7 +40,7 @@ public class StatusService {
             .headers(securityConfigService.getHttpHeaders())
             .body("User Token is not valid");
       }
-      liveFeed = statusDAO.getLiveFeed(id, token.getUserToken());
+      liveFeed = statusDAO.getLiveFeed(token);
 
       if (liveFeed != null) {
         log.info("Getting live feed for " + id);
@@ -68,7 +68,7 @@ public class StatusService {
             .headers(securityConfigService.getHttpHeaders())
             .body("User Token is not valid");
       }
-      liveFeed = statusDAO.getProfileLiveFeed(username);
+      liveFeed = statusDAO.getProfileLiveFeed(username, token);
 
       if (liveFeed != null) {
         log.info("Getting live feed for " + username);

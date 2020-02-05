@@ -6,9 +6,9 @@ public interface StatusDAO {
 
   Status getStatus(int id);
 
-  List<Status> getLiveFeed(int id, String token);
+  List<Status> getLiveFeed(Token token);
 
-  List<Status> getProfileLiveFeed(String username);
+  List<Status> getProfileLiveFeed(String username, Token token);
 
   boolean createStatus(Status status, Token token);
 

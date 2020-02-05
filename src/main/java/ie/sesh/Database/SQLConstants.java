@@ -8,7 +8,7 @@ public class SQLConstants {
       "UPDATE status SET user_id=?,message=?,location=?,likes=?,uploaded=? WHERE id=?";
   public static final String GET_STATUS_BY_ID = "SELECT * FROM status WHERE id = ?";
   public static final String GET_STATUS_BY_USERNAME =
-      "SELECT * ,status.id as status_id, users.username, users.first_name, users.last_name FROM status INNER JOIN users ON users.id=status.user_id WHERE users.username = ?";
+      "SELECT * ,status.id as status_id, users.username, users.first_name, users.last_name FROM status INNER JOIN users ON users.id=status.user_id WHERE users.username = ? ORDER BY status.id DESC";
   public static final String DELETE_STATUS =
       "DELETE s "
           + "FROM status s "

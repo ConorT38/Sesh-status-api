@@ -28,7 +28,7 @@ public class SQLConstants {
       "UPDATE comments SET status_id,user_id=?,message=?,likes=? WHERE id=?";
   public static final String GET_STATUS_COMMENT_BY_ID = "SELECT * FROM comments WHERE id = ?";
   public static final String GET_ALL_STATUS_COMMENTS_BY_ID =
-      "SELECT * FROM comments INNER JOIN users ON comments.user_id=users.id WHERE comments.status_id = ?";
+      "SELECT * FROM comments INNER JOIN users ON comments.user_id=users.id WHERE comments.status_id = ? ORDER BY comments.id DESC";
   public static final String DELETE_STATUS_COMMENT = "DELETE FROM comments WHERE id=?";
   public static final String CHECK_LIKED_COMMENT =
       "SELECT EXISTS(SELECT 1 FROM comments_likes where user_id =? and comment_id = ?);";

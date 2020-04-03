@@ -51,9 +51,7 @@ public class StatusDAOImpl implements StatusDAO {
       s.setMessage((String) status.get("message"));
       s.setLocation((int) status.get("location"));
       s.setLikes((int) status.get("likes"));
-      s.setLiked(
-          checkLikedStatus(
-              ((Long) (status.get("user_id"))).intValue(), ((Long) (status.get("id"))).intValue()));
+      s.setLiked(checkLikedStatus(token.getUserId(), ((Long) (status.get("id"))).intValue()));
       s.setDate((Timestamp) status.get("uploaded"));
       s.setHasImage((int) status.get("has_image") > 0);
       s.setImageLocation((String) status.get("media"));
@@ -88,8 +86,7 @@ public class StatusDAOImpl implements StatusDAO {
       s.setLikes((int) status.get("likes"));
       s.setNumComments((int) status.get("comments"));
       s.setLiked(
-          checkLikedStatus(
-              ((Long) (status.get("user_id"))).intValue(), ((Long) (status.get("id"))).intValue()));
+          checkLikedStatus(token.getUserId(), ((Long) (status.get("status_id"))).intValue()));
       s.setDate((Timestamp) status.get("uploaded"));
       s.setHasImage((int) status.get("has_image") > 0);
       s.setImageLocation((String) status.get("media"));
@@ -177,10 +174,7 @@ public class StatusDAOImpl implements StatusDAO {
         jdbcTemplate.queryForObject(
             CHECK_LIKED_STATUS, new Object[] {id, status_id}, Integer.class);
 
-    if (check == 1) {
-      return true;
-    }
-    return false;
+    return check == 1;
   }
 
   public boolean likeStatus(int user_id, int status_id, String token) {

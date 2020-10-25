@@ -16,6 +16,14 @@ public class Status {
   private int likes;
   private boolean liked;
   private int numComments;
+
+  private boolean isRepost;
+  private boolean userDidRepost;
+  private int numReposts;
+  private String reposterName;
+  private String reposterUsername;
+  private Timestamp repostDate;
+
   private boolean hasImage;
   private String imageLocation;
 
@@ -34,7 +42,13 @@ public class Status {
       int likes,
       boolean liked,
       Timestamp date,
-      int numComments) {
+      int numComments,
+      boolean userDidRepost,
+      boolean isRepost,
+      int numReposts,
+      String reposterName,
+      String reposterUsername,
+      Timestamp repostDate) {
     this.id = id;
     this.user_id = user_id;
     this.username = username;
@@ -46,6 +60,12 @@ public class Status {
     this.liked = liked;
     this.date = date;
     this.numComments = numComments;
+    this.userDidRepost = userDidRepost;
+    this.isRepost = isRepost;
+    this.numReposts = numReposts;
+    this.reposterName = reposterName;
+    this.reposterUsername = reposterUsername;
+    this.repostDate = repostDate;
   }
 
   public Status(
@@ -167,5 +187,53 @@ public class Status {
 
   public void setImageLocation(String imageLocation) {
     this.imageLocation = imageLocation;
+  }
+
+  public boolean isRepost() {
+    return isRepost;
+  }
+
+  public void setIsRepost(boolean repost) {
+    isRepost = repost;
+  }
+
+  public int getNumReposts() {
+    return numReposts;
+  }
+
+  public void setNumReposts(int numReposts) {
+    this.numReposts = numReposts;
+  }
+
+  public String getReposterName() {
+    return reposterName;
+  }
+
+  public void setReposterName(String reposterName) {
+    this.reposterName = reposterName;
+  }
+
+  public String getReposterUsername() {
+    return reposterUsername;
+  }
+
+  public void setReposterUsername(String reposterUsername) {
+    this.reposterUsername = reposterUsername;
+  }
+
+  public Timestamp getRepostDate() {
+    return repostDate;
+  }
+
+  public void setRepostDate(Timestamp repostDate) {
+    this.repostDate = repostDate;
+  }
+
+  public boolean isUserDidRepost() {
+    return userDidRepost;
+  }
+
+  public void setUserDidRepost(boolean userDidRepost) {
+    this.userDidRepost = userDidRepost;
   }
 }

@@ -53,8 +53,23 @@ public class StatusDAOImpl implements StatusDAO {
       s.setLikes((int) status.get("likes"));
       s.setLiked(checkLikedStatus(token.getUserId(), ((Long) (status.get("id"))).intValue()));
       s.setDate((Timestamp) status.get("uploaded"));
+      s.setNumComments((int) status.get("comments"));
       s.setHasImage((int) status.get("has_image") > 0);
       s.setImageLocation((String) status.get("media"));
+      s.setNumReposts((int) status.get("reposts"));
+
+      boolean isRepost = status.get("reposter_id") != null;
+      s.setIsRepost(isRepost);
+      if (isRepost) {
+        s.setReposterName(
+            (String) status.get("repost_first_name")
+                + " "
+                + (String) status.get("repost_last_name"));
+        s.setReposterUsername((String) status.get("repost_username"));
+        s.setRepostDate((Timestamp) status.get("repost_time"));
+        s.setUserDidRepost((int) status.get("reposter_id") == token.getUserId());
+      }
+
       statuses.add(s);
     }
     return statuses;
@@ -90,6 +105,8 @@ public class StatusDAOImpl implements StatusDAO {
       s.setDate((Timestamp) status.get("uploaded"));
       s.setHasImage((int) status.get("has_image") > 0);
       s.setImageLocation((String) status.get("media"));
+      s.setNumReposts((int) status.get("reposts"));
+      s.setIsRepost(status.get("reposter_id") == null);
 
       statuses.add(s);
     }
@@ -205,6 +222,40 @@ public class StatusDAOImpl implements StatusDAO {
               ps.setInt(1, user_id);
               ps.setInt(2, status_id);
               ps.setString(3, token);
+              return ps;
+            },
+            holder);
+
+    return check > 0;
+  }
+
+  public boolean repostStatus(int id, Token token) {
+    KeyHolder holder = new GeneratedKeyHolder();
+    int check =
+        jdbcTemplate.update(
+            connection -> {
+              PreparedStatement ps =
+                  connection.prepareStatement(REPOST_STATUS, Statement.RETURN_GENERATED_KEYS);
+              ps.setInt(1, token.getUserId());
+              ps.setInt(2, id);
+              ps.setString(3, token.getUserToken());
+              return ps;
+            },
+            holder);
+
+    return check > 0;
+  }
+
+  public boolean unrepostStatus(int id, Token token) {
+    KeyHolder holder = new GeneratedKeyHolder();
+    int check =
+        jdbcTemplate.update(
+            connection -> {
+              PreparedStatement ps =
+                  connection.prepareStatement(UNREPOST_STATUS, Statement.RETURN_GENERATED_KEYS);
+              ps.setInt(1, token.getUserId());
+              ps.setInt(2, id);
+              ps.setString(3, token.getUserToken());
               return ps;
             },
             holder);

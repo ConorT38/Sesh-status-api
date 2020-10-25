@@ -23,6 +23,9 @@ public class SQLConstants {
   public static final String LIKE_STATUS = "CALL like_status(?,?,?);";
   public static final String UNLIKE_STATUS = "CALL unlike_status(?,?,?);";
 
+  public static final String REPOST_STATUS = "CALL repost_status(?,?,?);";
+  public static final String UNREPOST_STATUS = "CALL unrepost_status(?,?,?);";
+
   public static final String INSERT_STATUS_COMMENT = "CALL create_comment(?,?,?,?)";
   public static final String UPDATE_STATUS_COMMENT =
       "UPDATE comments SET status_id,user_id=?,message=?,likes=? WHERE id=?";

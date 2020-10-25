@@ -21,4 +21,8 @@ public interface StatusDAO {
   boolean likeStatus(int id, int status_id, String token);
 
   boolean unlikeStatus(int id, int status_id, String token);
+
+  boolean repostStatus(int id, Token token);
+
+  boolean unrepostStatus(int id, Token token);
 }

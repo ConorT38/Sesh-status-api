@@ -127,4 +127,26 @@ public class StatusController {
     Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
     return statusService.unlikeStatus(status_id, token);
   }
+
+  @CrossOrigin(origins = "*")
+  @PostMapping("/repost/status/{status_id}")
+  @ResponseBody
+  public ResponseEntity repostStatus(
+      @RequestBody String status_data,
+      @RequestHeader HttpHeaders headers,
+      @PathVariable(name = "status_id") int status_id) {
+    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
+    return statusService.repostStatus(status_id, token);
+  }
+
+  @CrossOrigin(origins = "*")
+  @PostMapping("/unrepost/status/{status_id}")
+  @ResponseBody
+  public ResponseEntity unrepostStatus(
+      @RequestBody String status_data,
+      @RequestHeader HttpHeaders headers,
+      @PathVariable(name = "status_id") int status_id) {
+    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
+    return statusService.unrepostStatus(status_id, token);
+  }
 }

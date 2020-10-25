@@ -213,4 +213,58 @@ public class StatusService {
         .headers(securityConfigService.getHttpHeaders())
         .body("Failed to Unliked Status");
   }
+
+  public ResponseEntity repostStatus(int status_id, Token token) {
+    try {
+      if (!authenticationService.checkUserToken(token)) {
+        log.info("User Token is not valid");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .headers(securityConfigService.getHttpHeaders())
+            .body("User Token is not valid");
+      }
+      if (statusDAO.repostStatus(status_id, token)) {
+        log.info("Status Repost with id: " + status_id + " by User: " + token.getUserId());
+        return ResponseEntity.ok()
+            .headers(securityConfigService.getHttpHeaders())
+            .body("Status Reposted");
+      }
+      log.info("User not allowed to Repost status");
+      return ResponseEntity.status(HttpStatus.FORBIDDEN)
+          .headers(securityConfigService.getHttpHeaders())
+          .body("Repost denied");
+    } catch (Exception e) {
+      log.error(e.getMessage());
+    }
+    log.debug("Could not Repost Status: " + status_id);
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .headers(securityConfigService.getHttpHeaders())
+        .body("Failed to Repost Status");
+  }
+
+  public ResponseEntity unrepostStatus(int status_id, Token token) {
+    try {
+      if (!authenticationService.checkUserToken(token)) {
+        log.info("User Token is not valid");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .headers(securityConfigService.getHttpHeaders())
+            .body("User Token is not valid");
+      }
+      if (statusDAO.unrepostStatus(status_id, token)) {
+        log.info("Status Unrepost with id: " + status_id + " by User: " + token.getUserId());
+        return ResponseEntity.ok()
+            .headers(securityConfigService.getHttpHeaders())
+            .body("Status Reposted");
+      }
+      log.info("User not allowed to Unrepost status");
+      return ResponseEntity.status(HttpStatus.FORBIDDEN)
+          .headers(securityConfigService.getHttpHeaders())
+          .body("Repost denied");
+    } catch (Exception e) {
+      log.error(e.getMessage());
+    }
+    log.debug("Could not Unrepost Status: " + status_id);
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .headers(securityConfigService.getHttpHeaders())
+        .body("Failed to Unrepost Status");
+  }
 }

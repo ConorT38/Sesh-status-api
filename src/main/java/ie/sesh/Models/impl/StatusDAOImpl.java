@@ -67,7 +67,8 @@ public class StatusDAOImpl implements StatusDAO {
                 + (String) status.get("repost_last_name"));
         s.setReposterUsername((String) status.get("repost_username"));
         s.setRepostDate((Timestamp) status.get("repost_time"));
-        s.setUserDidRepost((int) status.get("reposter_id") == token.getUserId());
+        s.setUserDidRepost(
+            checkUserRepostedStatus((int) status.get("status_id"), token.getUserId()));
       }
 
       statuses.add(s);
@@ -261,6 +262,15 @@ public class StatusDAOImpl implements StatusDAO {
             holder);
 
     return check > 0;
+  }
+
+  private boolean checkUserRepostedStatus(int repostedStatusId, int userId) {
+    log.info("TEST - " + repostedStatusId + " and user: " + userId);
+    int check =
+        jdbcTemplate.queryForObject(
+            CHECK_REPOSTED_STATUS, new Object[] {repostedStatusId, userId}, Integer.class);
+    log.debug("check= " + check);
+    return check == 1;
   }
 }
 

@@ -25,6 +25,8 @@ public class SQLConstants {
 
   public static final String REPOST_STATUS = "CALL repost_status(?,?,?);";
   public static final String UNREPOST_STATUS = "CALL unrepost_status(?,?,?);";
+  public static final String CHECK_REPOSTED_STATUS =
+      "SELECT EXISTS(SELECT 1 FROM reposts where status_id =? and reposter_id = ?);";
 
   public static final String INSERT_STATUS_COMMENT = "CALL create_comment(?,?,?,?)";
   public static final String UPDATE_STATUS_COMMENT =

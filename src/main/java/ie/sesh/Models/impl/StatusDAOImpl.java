@@ -157,11 +157,13 @@ public class StatusDAOImpl implements StatusDAO {
                 return ps;
               },
               holder);
-      return check > 0;
+      if (check > 0) {
+        return incrementUserNumPosts(token.getUserId());
+      }
     } catch (DataAccessException e) {
       log.error(e.getMessage());
-      return false;
     }
+    return false;
   }
 
   public boolean deleteStatus(int id, int user_id, String token) {
@@ -180,7 +182,9 @@ public class StatusDAOImpl implements StatusDAO {
               },
               holder);
 
-      return numberRowsAffected > 0;
+      if (numberRowsAffected > 0) {
+        return decrementUserNumPosts(user_id);
+      }
     } catch (Exception e) {
       log.error(e.getMessage());
     }
@@ -265,11 +269,41 @@ public class StatusDAOImpl implements StatusDAO {
   }
 
   private boolean checkUserRepostedStatus(int repostedStatusId, int userId) {
-    log.info("TEST - " + repostedStatusId + " and user: " + userId);
     int check =
         jdbcTemplate.queryForObject(
             CHECK_REPOSTED_STATUS, new Object[] {repostedStatusId, userId}, Integer.class);
-    log.debug("check= " + check);
+    return check == 1;
+  }
+
+  private boolean incrementUserNumPosts(int userId) {
+    log.info("incrementing num posts for user " + userId);
+    KeyHolder holder = new GeneratedKeyHolder();
+    int check =
+        jdbcTemplate.update(
+            connection -> {
+              PreparedStatement ps =
+                  connection.prepareStatement(
+                      INCREMENT_USER_POSTS, Statement.RETURN_GENERATED_KEYS);
+              ps.setInt(1, userId);
+              return ps;
+            },
+            holder);
+    return check == 1;
+  }
+
+  private boolean decrementUserNumPosts(int userId) {
+    log.info("decrementing num posts for user " + userId);
+    KeyHolder holder = new GeneratedKeyHolder();
+    int check =
+        jdbcTemplate.update(
+            connection -> {
+              PreparedStatement ps =
+                  connection.prepareStatement(
+                      DECREMENT_USER_POSTS, Statement.RETURN_GENERATED_KEYS);
+              ps.setInt(1, userId);
+              return ps;
+            },
+            holder);
     return check == 1;
   }
 }

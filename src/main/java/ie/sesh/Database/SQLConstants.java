@@ -54,4 +54,7 @@ public class SQLConstants {
 
   public static final String CHECK_USER_TOKEN =
       "SELECT 1 FROM user_logged_in WHERE token=? AND user_id=?";
+
+  public static final String INCREMENT_USER_POSTS = "UPDATE users SET posts = posts+1 WHERE id = ?";
+  public static final String DECREMENT_USER_POSTS = "UPDATE users SET posts = posts-1 WHERE id = ?";
 }

@@ -1,7 +1,8 @@
 package ie.sesh.Models.impl;
 
 import ie.sesh.Models.AuthDAO;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,7 +12,7 @@ import static ie.sesh.Database.SQLConstants.CHECK_USER_TOKEN;
 
 @Component
 public class AuthDAOImpl implements AuthDAO {
-  private static final Logger log = Logger.getLogger(AuthDAOImpl.class);
+  private final Logger log = LoggerFactory.getLogger(this.getClass());
 
   @Autowired private JdbcTemplate jdbcTemplate;
 

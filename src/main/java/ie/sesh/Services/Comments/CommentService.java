@@ -8,7 +8,8 @@ import ie.sesh.Models.Comments.CommentDAO;
 import ie.sesh.Models.Token;
 import ie.sesh.Services.AuthenticationService;
 import ie.sesh.Services.SecurityConfigService;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ import java.util.List;
 @Service
 public class CommentService {
 
-  private static final Logger log = Logger.getLogger(CommentService.class);
+  private final Logger log = LoggerFactory.getLogger(this.getClass());
 
   @Autowired CommentDAO commentDAO;
 
@@ -33,15 +34,9 @@ public class CommentService {
     return commentDAO.getComment(id);
   }
 
-  public ResponseEntity getAllStatusComments(int id, Token token) {
+  public ResponseEntity getAllStatusComments(int id) {
     List<Comment> commentFeed;
     try {
-      if (!authenticationService.checkUserToken(token)) {
-        log.info("User Token is not valid");
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-            .headers(securityConfigService.getHttpHeaders())
-            .body("User Token is not valid");
-      }
 
       commentFeed = commentDAO.getAllStatusComments(id);
       if (commentFeed != null) {
@@ -75,15 +70,9 @@ public class CommentService {
     return new ResponseEntity<>("Failed to update Comment", HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  public ResponseEntity createComment(Comment comment, Token token) {
+  public ResponseEntity createComment(Comment comment) {
     try {
-      if (!authenticationService.checkUserToken(token)) {
-        log.info("User Token is not valid");
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-            .headers(securityConfigService.getHttpHeaders())
-            .body("User Token is not valid");
-      }
-      if (!commentDAO.createComment(comment, token)) {
+      if (!commentDAO.createComment(comment)) {
         return new ResponseEntity<>("Failed to create Comment", HttpStatus.INTERNAL_SERVER_ERROR);
       }
       return new ResponseEntity<>("Comment created", HttpStatus.OK);

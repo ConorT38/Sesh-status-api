@@ -9,7 +9,7 @@ public interface CommentDAO {
 
   List<Comment> getAllStatusComments(int id);
 
-  boolean createComment(Comment comment, Token token);
+  boolean createComment(Comment comment);
 
   boolean updateComment(Comment comment);
 

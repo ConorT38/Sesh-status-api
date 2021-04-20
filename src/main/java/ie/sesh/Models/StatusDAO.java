@@ -6,23 +6,25 @@ public interface StatusDAO {
 
   Status getStatus(int id);
 
-  List<Status> getLiveFeed(Token token);
+  List<Status> getLiveFeed(int userId);
 
-  List<Status> getProfileLiveFeed(String username, Token token);
+  List<Status> getProfileLiveFeed(String username);
 
-  boolean createStatus(Status status, Token token);
+  List<Status> getProfileLiveFeed(String username, int userId);
+
+  boolean createStatus(Status status);
 
   boolean updateStatus(Status status);
 
-  boolean deleteStatus(int id, int user_id, String token);
+  boolean deleteStatus(int id, int userId);
 
   boolean checkLikedStatus(int id, int status_id);
 
-  boolean likeStatus(int id, int status_id, String token);
+  boolean likeStatus(int id, int status_id);
 
-  boolean unlikeStatus(int id, int status_id, String token);
+  boolean unlikeStatus(int id, int status_id);
 
-  boolean repostStatus(int id, Token token);
+  boolean repostStatus(int id, int userId);
 
-  boolean unrepostStatus(int id, Token token);
+  boolean unrepostStatus(int id, int userId);
 }

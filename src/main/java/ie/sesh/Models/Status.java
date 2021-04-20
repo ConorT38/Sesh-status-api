@@ -1,10 +1,12 @@
 package ie.sesh.Models;
 
 import java.sql.Timestamp;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 
 public class Status {
 
-  private int id;
+  @Id private ObjectId statusId;
   private int user_id;
   private String username;
   private String first_name;
@@ -32,7 +34,7 @@ public class Status {
   public Status() {}
 
   public Status(
-      int id,
+      ObjectId statusId,
       int user_id,
       String username,
       String first_name,
@@ -49,7 +51,7 @@ public class Status {
       String reposterName,
       String reposterUsername,
       Timestamp repostDate) {
-    this.id = id;
+    this.statusId = statusId;
     this.user_id = user_id;
     this.username = username;
     this.first_name = first_name;
@@ -77,12 +79,8 @@ public class Status {
     this.imageLocation = imageLocation;
   }
 
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
+  public ObjectId getId() {
+    return statusId;
   }
 
   public int getUser_id() {

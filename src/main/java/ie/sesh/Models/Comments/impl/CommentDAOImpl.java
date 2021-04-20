@@ -3,7 +3,8 @@ package ie.sesh.Models.Comments.impl;
 import ie.sesh.Models.Comments.Comment;
 import ie.sesh.Models.Comments.CommentDAO;
 import ie.sesh.Models.Token;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -22,7 +23,7 @@ import static java.lang.Math.toIntExact;
 @Component
 public class CommentDAOImpl implements CommentDAO {
 
-  private static final Logger log = Logger.getLogger(CommentDAOImpl.class);
+  private final Logger log = LoggerFactory.getLogger(this.getClass());
 
   @Autowired private JdbcTemplate jdbcTemplate;
 
@@ -76,9 +77,12 @@ public class CommentDAOImpl implements CommentDAO {
     return false;
   }
 
-  public boolean createComment(Comment comment, Token token) {
+  public boolean createComment(Comment comment) {
     log.info(
-        "User: " + token.getUserId() + " inserting comment into status: " + comment.getStatus_id());
+        "User: "
+            + comment.getUser_id()
+            + " inserting comment into status: "
+            + comment.getStatus_id());
     KeyHolder holder = new GeneratedKeyHolder();
     try {
       int check =
@@ -90,11 +94,22 @@ public class CommentDAOImpl implements CommentDAO {
                 ps.setInt(1, comment.getUser_id());
                 ps.setInt(2, comment.getStatus_id());
                 ps.setString(3, comment.getMessage());
-                ps.setString(4, token.getUserToken());
                 return ps;
               },
               holder);
-      return check > 0;
+      if (check > 0) {
+        int done =
+            jdbcTemplate.update(
+                connection -> {
+                  PreparedStatement ps =
+                      connection.prepareStatement(
+                          INCREMENT_STATUS_COMMENTS, Statement.RETURN_GENERATED_KEYS);
+                  ps.setInt(1, comment.getStatus_id());
+                  return ps;
+                },
+                holder);
+        return done > 0;
+      }
     } catch (Exception e) {
       log.error(e.getMessage());
     }

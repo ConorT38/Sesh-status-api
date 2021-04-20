@@ -6,8 +6,10 @@ import ie.sesh.Services.Comments.CommentService;
 import ie.sesh.Utils.AuthUtils;
 import ie.sesh.Utils.CommentUtils;
 
-import org.apache.log4j.Logger;
+import ie.sesh.Utils.JwtTokenUtil;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,11 +21,13 @@ import java.util.List;
 @RequestMapping("/api/v1/")
 @RestController
 public class CommentsController {
-  private static final Logger log = Logger.getLogger(CommentsController.class);
+  private final Logger log = LoggerFactory.getLogger(this.getClass());
 
   @Autowired CommentService commentService;
 
   @Autowired CommentUtils commentUtils;
+
+  @Autowired JwtTokenUtil jwtTokenUtil;
 
   @CrossOrigin(origins = "*")
   @GetMapping("/comment/{id}")
@@ -37,8 +41,7 @@ public class CommentsController {
   @ResponseBody
   public ResponseEntity<List<Comment>> getAllStatusComments(
       @PathVariable("id") String id, @RequestHeader HttpHeaders headers) {
-    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
-    return commentService.getAllStatusComments(Integer.parseInt(id), token);
+    return commentService.getAllStatusComments(Integer.parseInt(id));
   }
 
   @CrossOrigin(origins = "*")
@@ -55,8 +58,8 @@ public class CommentsController {
       @RequestBody String comment_data, @RequestHeader HttpHeaders headers) {
     log.info("Comment: " + comment_data);
     Comment comment = commentUtils.buildComment(comment_data);
-    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
-    return commentService.createComment(comment, token);
+    int userId = jwtTokenUtil.getUserIdFromToken(jwtTokenUtil.getTokenFromHeaders(headers));
+    return commentService.createComment(comment);
   }
 
   @CrossOrigin(origins = "*")

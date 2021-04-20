@@ -5,9 +5,11 @@ import ie.sesh.Models.Token;
 import ie.sesh.Services.StatusService;
 import ie.sesh.Utils.AuthUtils;
 import ie.sesh.Utils.CommonUtils;
+import ie.sesh.Utils.JwtTokenUtil;
 import ie.sesh.Utils.StatusUtils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,20 +22,13 @@ import java.util.List;
 @RestController
 public class StatusController {
 
-  private static final Logger log = Logger.getLogger(StatusController.class);
+  private final Logger log = LoggerFactory.getLogger(this.getClass());
 
   @Autowired StatusService statusService;
 
   @Autowired StatusUtils statusUtils;
 
-  @CrossOrigin(origins = "*")
-  @GetMapping("/status/{status_id}")
-  @ResponseBody
-  public ResponseEntity<Status> getStatus(
-      @PathVariable(name = "status_id") int id, @RequestHeader HttpHeaders headers) {
-    log.info("Get status " + id);
-    return new ResponseEntity<>(statusService.getStatus(id), HttpStatus.OK);
-  }
+  @Autowired JwtTokenUtil jwtTokenUtil;
 
   @CrossOrigin(origins = "*")
   @GetMapping("/live/feed/{user_id}")
@@ -41,18 +36,18 @@ public class StatusController {
   public ResponseEntity<List<Status>> getLiveFeed(
       @PathVariable(name = "user_id") int id, @RequestHeader HttpHeaders headers) {
     log.info("Get all live feed for user " + id);
-    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
-    return statusService.getLiveFeed(id, token);
+    return statusService.getLiveFeed(id);
   }
 
   @CrossOrigin(origins = "*")
-  @GetMapping("/profile/live/feed/{username}")
+  @GetMapping("/profile/live/feed/{username}/{userId}")
   @ResponseBody
   public ResponseEntity<List<Status>> getProfileLiveFeed(
-      @PathVariable(name = "username") String username, @RequestHeader HttpHeaders headers) {
+      @PathVariable(name = "username") String username,
+      @PathVariable int userId,
+      @RequestHeader HttpHeaders headers) {
     log.info("Get all live feed for user " + username);
-    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
-    return statusService.getProfileLiveFeed(username, token);
+    return statusService.getProfileLiveFeed(username, userId);
   }
 
   @CrossOrigin(origins = "*")
@@ -69,9 +64,12 @@ public class StatusController {
   @ResponseBody
   public ResponseEntity createStatus(
       @RequestBody String status_data, @RequestHeader HttpHeaders headers) {
+    int userId = jwtTokenUtil.getUserIdFromToken(jwtTokenUtil.getTokenFromHeaders(headers));
     Status status = statusUtils.buildStatus(status_data);
-    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
-    return statusService.createStatus(status, token);
+    status.setUser_id(userId);
+    log.info("Status created");
+
+    return statusService.createStatus(status);
   }
 
   @CrossOrigin(origins = "*")
@@ -79,9 +77,8 @@ public class StatusController {
   @ResponseBody
   public ResponseEntity deleteStatus(
       @PathVariable(name = "id") int id, @RequestHeader HttpHeaders headers) {
-    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
-    log.debug("User Token: " + token.getUserToken());
-    return statusService.deleteStatus(id, token);
+    int userId = jwtTokenUtil.getUserIdFromToken(jwtTokenUtil.getTokenFromHeaders(headers));
+    return statusService.deleteStatus(id, userId);
   }
 
   @CrossOrigin(origins = "*")
@@ -113,8 +110,8 @@ public class StatusController {
       @RequestBody String status_data,
       @RequestHeader HttpHeaders headers,
       @PathVariable(name = "status_id") int status_id) {
-    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
-    return statusService.likeStatus(status_id, token);
+    int userId = jwtTokenUtil.getUserIdFromToken(jwtTokenUtil.getTokenFromHeaders(headers));
+    return statusService.likeStatus(status_id, userId);
   }
 
   @CrossOrigin(origins = "*")
@@ -124,8 +121,8 @@ public class StatusController {
       @RequestBody String status_data,
       @RequestHeader HttpHeaders headers,
       @PathVariable(name = "status_id") int status_id) {
-    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
-    return statusService.unlikeStatus(status_id, token);
+    int userId = jwtTokenUtil.getUserIdFromToken(jwtTokenUtil.getTokenFromHeaders(headers));
+    return statusService.unlikeStatus(status_id, userId);
   }
 
   @CrossOrigin(origins = "*")
@@ -135,8 +132,8 @@ public class StatusController {
       @RequestBody String status_data,
       @RequestHeader HttpHeaders headers,
       @PathVariable(name = "status_id") int status_id) {
-    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
-    return statusService.repostStatus(status_id, token);
+    int userId = jwtTokenUtil.getUserIdFromToken(jwtTokenUtil.getTokenFromHeaders(headers));
+    return statusService.repostStatus(status_id, userId);
   }
 
   @CrossOrigin(origins = "*")
@@ -146,7 +143,7 @@ public class StatusController {
       @RequestBody String status_data,
       @RequestHeader HttpHeaders headers,
       @PathVariable(name = "status_id") int status_id) {
-    Token token = AuthUtils.buildToken(headers.getFirst("Authorization"));
-    return statusService.unrepostStatus(status_id, token);
+    int userId = jwtTokenUtil.getUserIdFromToken(jwtTokenUtil.getTokenFromHeaders(headers));
+    return statusService.unrepostStatus(status_id, userId);
   }
 }
